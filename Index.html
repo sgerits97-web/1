@@ -130,14 +130,14 @@ select.f-input { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://
 @keyframes slideUp { from { bottom: -60px; opacity: 0; } to { bottom: 20px; opacity: 1; } }
 .loading-text { font-size: 14px; color: var(--text); font-weight: 500; }
 
-.canvas-toolbar { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--surface); border-bottom: 0.5px solid var(--border); flex-shrink: 0; flex-wrap: wrap; position: sticky; top: 0; z-index: 90; }
+.canvas-toolbar { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--surface); border-bottom: 0.5px solid var(--border); flex-shrink: 0; flex-wrap: wrap; }
 .calc-container { display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: #f8f8f6; border-radius: 4px; font-size: 13px; }
 .calc-label { font-size: 11px; color: var(--text3); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
 .calc-value { font-weight: 600; color: var(--text); }
 .color-btn { width: 28px; height: 28px; border-radius: 4px; border: 1.5px solid var(--border); cursor: pointer; position: relative; }
 .color-btn.active::after { content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.3); }
-#canvas-container { flex: 1; position: relative; overflow: hidden; background: #f5f5f5; touch-action: none; }
-#canvas-main { display: block; cursor: crosshair; touch-action: none; position: absolute; }
+#canvas-container { flex: 1; position: relative; overflow: auto; background: #f5f5f5; touch-action: pan-x pan-y pinch-zoom; -webkit-overflow-scrolling: touch; }
+#canvas-main { display: block; cursor: crosshair; touch-action: none; min-width: 100%; min-height: 100%; }
 </style>
 </head>
 <body>
@@ -575,6 +575,8 @@ function initCanvas() {
   const containerHeight = container.clientHeight;
   const dpr = window.devicePixelRatio || 1;
   
+  console.log('Container size:', containerWidth, 'x', containerHeight);
+  
   // Canvas internal resolution
   canvas.width = containerWidth * dpr;
   canvas.height = containerHeight * dpr;
@@ -582,8 +584,6 @@ function initCanvas() {
   // Canvas display size (vult hele container)
   canvas.style.width = containerWidth + 'px';
   canvas.style.height = containerHeight + 'px';
-  canvas.style.left = '0';
-  canvas.style.top = '0';
   
   ctx.scale(dpr, dpr);
   ctx.lineCap = 'round';
@@ -617,9 +617,9 @@ function initCanvas() {
   canvas.addEventListener('pointerleave', stopDrawing);
   
   // Touch events voor pinch zoom
-  canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
-  canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
-  canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
+  container.addEventListener('touchstart', handleTouchStart, { passive: false });
+  container.addEventListener('touchmove', handleTouchMove, { passive: false });
+  container.addEventListener('touchend', handleTouchEnd, { passive: false });
 }
 
 function getCanvasPoint(e) {
@@ -671,6 +671,8 @@ function stopDrawing(e) {
 }
 
 // Touch handlers voor pinch zoom
+let initialPinchScale = 1;
+
 function handleTouchStart(e) {
   if (e.touches.length === 2) {
     e.preventDefault();
@@ -678,6 +680,7 @@ function handleTouchStart(e) {
     isPinching = true;
     isDrawing = false;
     lastPinchDist = getPinchDistance(e.touches);
+    initialPinchScale = canvasScale;
   }
 }
 
@@ -685,23 +688,28 @@ function handleTouchMove(e) {
   if (e.touches.length === 2 && isPinching) {
     e.preventDefault();
     e.stopPropagation();
-    const dist = getPinchDistance(e.touches);
-    const delta = dist - lastPinchDist;
     
-    if (Math.abs(delta) > 5) {
-      if (delta > 0) {
-        zoomIn();
-      } else {
-        zoomOut();
-      }
-      lastPinchDist = dist;
-    }
+    const dist = getPinchDistance(e.touches);
+    const scale = dist / lastPinchDist;
+    
+    canvasScale = Math.max(0.5, Math.min(4, initialPinchScale * scale));
+    
+    const container = document.getElementById('canvas-container');
+    const baseWidth = container.clientWidth;
+    const baseHeight = container.clientHeight;
+    
+    canvas.style.width = (baseWidth * canvasScale) + 'px';
+    canvas.style.height = (baseHeight * canvasScale) + 'px';
+    updateZoomDisplay();
   }
 }
 
 function handleTouchEnd(e) {
   if (e.touches.length < 2) {
     isPinching = false;
+    if (e.touches.length === 0) {
+      initialPinchScale = canvasScale;
+    }
   }
 }
 
@@ -713,34 +721,32 @@ function getPinchDistance(touches) {
 
 // Zoom functies - vereenvoudigd
 function zoomIn() {
+  canvasScale = Math.min(4, canvasScale * 1.25);
   const container = document.getElementById('canvas-container');
-  const newWidth = parseFloat(canvas.style.width) * 1.2;
-  const newHeight = parseFloat(canvas.style.height) * 1.2;
+  const baseWidth = container.clientWidth;
+  const baseHeight = container.clientHeight;
   
-  canvas.style.width = newWidth + 'px';
-  canvas.style.height = newHeight + 'px';
-  canvasScale *= 1.2;
+  canvas.style.width = (baseWidth * canvasScale) + 'px';
+  canvas.style.height = (baseHeight * canvasScale) + 'px';
   updateZoomDisplay();
 }
 
 function zoomOut() {
+  canvasScale = Math.max(0.5, canvasScale / 1.25);
   const container = document.getElementById('canvas-container');
-  const newWidth = parseFloat(canvas.style.width) / 1.2;
-  const newHeight = parseFloat(canvas.style.height) / 1.2;
+  const baseWidth = container.clientWidth;
+  const baseHeight = container.clientHeight;
   
-  canvas.style.width = newWidth + 'px';
-  canvas.style.height = newHeight + 'px';
-  canvasScale /= 1.2;
+  canvas.style.width = (baseWidth * canvasScale) + 'px';
+  canvas.style.height = (baseHeight * canvasScale) + 'px';
   updateZoomDisplay();
 }
 
 function resetZoom() {
+  canvasScale = 1;
   const container = document.getElementById('canvas-container');
   canvas.style.width = container.clientWidth + 'px';
   canvas.style.height = container.clientHeight + 'px';
-  canvas.style.left = '0';
-  canvas.style.top = '0';
-  canvasScale = 1;
   updateZoomDisplay();
 }
 
