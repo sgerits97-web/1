@@ -7,23 +7,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="NTA 8800">
 <meta name="theme-color" content="#2c5f8a">
-<link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/svg+xml" href="icon.svg">
 <title>NTA 8800 Opname</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script>
-  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-  window.addEventListener('load', () => {
-    if (!window.jspdf) {
-      console.error('jsPDF niet geladen!');
-    } else {
-      console.log('jsPDF succesvol geladen');
-    }
-  });
-</script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 :root {
@@ -41,11 +26,21 @@
   --success: #2c8a5f;
   --radius-sm: 6px;
 }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; background: var(--bg); color: var(--text); overflow: hidden; -webkit-user-select: none; user-select: none; }
+body { 
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; 
+  background: var(--bg); 
+  color: var(--text); 
+  overflow: hidden; 
+  -webkit-user-select: none; 
+  user-select: none;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
 
 /* ── START SCHERM ── */
 #start-screen { height: 100vh; display: flex; flex-direction: column; }
-.topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--surface); border-bottom: 0.5px solid var(--border); flex-shrink: 0; height: 54px; position: sticky; top: 0; z-index: 100; }
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--surface); border-bottom: 0.5px solid var(--border); flex-shrink: 0; height: 54px; }
 .topbar-title { font-size: 18px; font-weight: 600; color: var(--text); }
 .btn-new { background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm); padding: 7px 16px; font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit; }
 .lijst-container { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 12px; }
@@ -58,8 +53,18 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxyge
 .empty-state { text-align: center; padding: 60px 20px; color: var(--text3); font-size: 14px; }
 
 /* ── OPNAME SCHERM ── */
-#opname-screen { height: 100vh; display: flex; flex-direction: column; display: none; }
-.opname-topbar { display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: var(--surface); border-bottom: 0.5px solid var(--border); flex-shrink: 0; height: 48px; position: sticky; top: 0; z-index: 100; }
+#opname-screen { 
+  height: 100vh; 
+  display: flex; 
+  flex-direction: column; 
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.opname-topbar { display: flex; align-items: center; gap: 12px; padding: 10px 16px; background: var(--surface); border-bottom: 0.5px solid var(--border); flex-shrink: 0; height: 48px; }
 .btn-back { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--accent); padding: 4px 8px 4px 0; font-family: inherit; }
 .opname-addr-input { flex: 1; border: none; background: transparent; font-size: 15px; font-weight: 500; color: var(--text); outline: none; font-family: inherit; min-width: 0; }
 .opname-addr-input::placeholder { color: var(--text3); font-weight: 400; }
@@ -97,19 +102,6 @@ select.f-input { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://
 .type-option { display: block; width: 100%; text-align: left; padding: 10px 12px; border: none; background: none; border-radius: var(--radius-sm); font-size: 14px; font-family: inherit; color: var(--text); cursor: pointer; }
 .type-option:hover, .type-option:active { background: var(--accent-light); color: var(--accent); }
 
-/* ── PDF VIEWER ── */
-#pdf-viewer { position: fixed; inset: 0; background: #2a2a2a; z-index: 2000; display: none; flex-direction: column; }
-#pdf-viewer.open { display: flex; }
-.pdf-toolbar { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #1a1a1a; color: #fff; flex-shrink: 0; }
-.pdf-toolbar button { padding: 8px 16px; border: none; border-radius: 6px; background: #3a3a3a; color: #fff; font-family: inherit; font-size: 14px; cursor: pointer; font-weight: 500; }
-.pdf-toolbar button:hover { background: #4a4a4a; }
-.pdf-toolbar button.primary { background: var(--accent); }
-.pdf-toolbar button.primary:hover { background: #2c5f8a; }
-.pdf-toolbar button.danger { background: #8a2c2c; }
-.pdf-toolbar button.danger:hover { background: #6a1c1c; }
-.pdf-canvas-container { flex: 1; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 20px; position: relative; }
-#pdf-canvas { background: #fff; box-shadow: 0 4px 20px rgba(0,0,0,.5); cursor: crosshair; touch-action: none; }
-
 /* ── PV ── */
 .pv-row { background: var(--surface2); border: 0.5px solid var(--border2); border-radius: var(--radius-sm); padding: 8px; margin-bottom: 6px; }
 .pv-row-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
@@ -119,7 +111,45 @@ select.f-input { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://
 .btn-add:active { background: var(--surface2); }
 
 /* ── CANVAS ── */
-.canvas-panel { width: 66.67%; display: flex; flex-direction: column; background: #fff; position: relative; overflow: hidden; }
+.canvas-panel { 
+  width: 66.67%; 
+  display: flex; 
+  flex-direction: column; 
+  background: #fff; 
+  position: relative;
+}
+
+.canvas-toolbar { 
+  display: flex; 
+  align-items: center; 
+  gap: 8px; 
+  padding: 8px 12px; 
+  background: var(--surface); 
+  border-bottom: 0.5px solid var(--border); 
+  flex-shrink: 0; 
+  flex-wrap: wrap; 
+}
+.calc-container { display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: #f8f8f6; border-radius: 4px; font-size: 13px; }
+.calc-label { font-size: 11px; color: var(--text3); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.calc-value { font-weight: 600; color: var(--text); }
+.color-btn { width: 28px; height: 28px; border-radius: 4px; border: 1.5px solid var(--border); cursor: pointer; position: relative; }
+.color-btn.active::after { content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.3); }
+
+#canvas-wrapper {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: #e8e8e8;
+}
+
+#canvas-main { 
+  display: block; 
+  background: white;
+  touch-action: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 
 /* ── LOADING OVERLAY ── */
 .loading-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 3000; }
@@ -127,17 +157,7 @@ select.f-input { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://
 .loading-content { background: var(--surface); border-radius: 12px; padding: 30px 40px; text-align: center; }
 .loading-spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
 @keyframes spin { to { transform: rotate(360deg); } }
-@keyframes slideUp { from { bottom: -60px; opacity: 0; } to { bottom: 20px; opacity: 1; } }
 .loading-text { font-size: 14px; color: var(--text); font-weight: 500; }
-
-.canvas-toolbar { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--surface); border-bottom: 0.5px solid var(--border); flex-shrink: 0; flex-wrap: wrap; }
-.calc-container { display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: #f8f8f6; border-radius: 4px; font-size: 13px; }
-.calc-label { font-size: 11px; color: var(--text3); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
-.calc-value { font-weight: 600; color: var(--text); }
-.color-btn { width: 28px; height: 28px; border-radius: 4px; border: 1.5px solid var(--border); cursor: pointer; position: relative; }
-.color-btn.active::after { content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.3); }
-#canvas-container { flex: 1; position: relative; overflow: auto; background: #f5f5f5; touch-action: pan-x pan-y pinch-zoom; -webkit-overflow-scrolling: touch; }
-#canvas-main { display: block; cursor: crosshair; touch-action: none; min-width: 100%; min-height: 100%; }
 </style>
 </head>
 <body>
@@ -159,9 +179,9 @@ select.f-input { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://
     <button class="btn-save" onclick="exportPDF()">PDF</button>
   </div>
   
-  <div class="split-layout" style="touch-action: none;">
+  <div class="split-layout">
     <!-- FORMULIER PANEL -->
-    <div class="formulier-panel" style="touch-action: pan-y;">
+    <div class="formulier-panel">
       <div class="formulier-scroll">
         <!-- Basisgegevens -->
         <div class="f-section">
@@ -318,7 +338,7 @@ select.f-input { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://
         <button class="btn-icon" onclick="resetZoom()" title="Reset zoom">⊙</button>
       </div>
       
-      <div id="canvas-container">
+      <div id="canvas-wrapper">
         <canvas id="canvas-main"></canvas>
       </div>
     </div>
@@ -352,19 +372,13 @@ let huidigeOpname = null;
 let currentConsRow = null;
 
 // ══ CANVAS STATE ══
-let canvas, ctx;
+let canvas, ctx, wrapper;
 let isDrawing = false;
 let currentColor = '#000000';
 let drawingHistory = [];
 let historyStep = -1;
-let canvasScale = 1;
-let canvasOffsetX = 0;
-let canvasOffsetY = 0;
-let isPinching = false;
-let lastPinchDist = 0;
-let isPanning = false;
-let lastPanX = 0;
-let lastPanY = 0;
+let scale = 1;
+let lastX, lastY;
 
 // ══ STARTSCHERM ══
 function renderStartLijst() {
@@ -415,7 +429,7 @@ function naarOpnamescherm() {
   document.getElementById('start-screen').style.display = 'none';
   document.getElementById('opname-screen').style.display = 'flex';
   laadFormulier();
-  initCanvas();
+  setTimeout(initCanvas, 100); // Wacht tot layout klaar is
 }
 
 function naarStartscherm() {
@@ -497,7 +511,6 @@ function updateCons(idx, field, value) {
   saveCurrentOpname();
 }
 
-// Close modal bij click buiten
 document.getElementById('type-modal').onclick = (e) => {
   if (e.target.id === 'type-modal') {
     document.getElementById('type-modal').classList.remove('open');
@@ -564,198 +577,99 @@ function updatePV(idx, field, value) {
   saveCurrentOpname();
 }
 
-// ══ CANVAS - VERBETERD MET APPLE PENCIL & ZOOM ══
+// ══ CANVAS - VOLLEDIG NIEUW SIMPEL SYSTEEM ══
 function initCanvas() {
   canvas = document.getElementById('canvas-main');
-  const container = document.getElementById('canvas-container');
-  ctx = canvas.getContext('2d', { willReadFrequently: false });
+  wrapper = document.getElementById('canvas-wrapper');
+  ctx = canvas.getContext('2d');
   
-  // Stel canvas grootte in op container grootte
-  const containerWidth = container.clientWidth;
-  const containerHeight = container.clientHeight;
   const dpr = window.devicePixelRatio || 1;
+  const wrapperWidth = wrapper.clientWidth;
+  const wrapperHeight = wrapper.clientHeight;
   
-  console.log('Container size:', containerWidth, 'x', containerHeight);
+  console.log('Wrapper size:', wrapperWidth, 'x', wrapperHeight);
   
-  // Canvas internal resolution
-  canvas.width = containerWidth * dpr;
-  canvas.height = containerHeight * dpr;
+  // Canvas resolution
+  canvas.width = wrapperWidth * dpr;
+  canvas.height = wrapperHeight * dpr;
   
-  // Canvas display size (vult hele container)
-  canvas.style.width = containerWidth + 'px';
-  canvas.style.height = containerHeight + 'px';
+  // Canvas display size
+  canvas.style.width = wrapperWidth + 'px';
+  canvas.style.height = wrapperHeight + 'px';
   
   ctx.scale(dpr, dpr);
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
   
-  // Laad bestaande tekening
+  // Laad bestaande tekening of maak wit canvas
   if (huidigeOpname.canvasData) {
     const img = new Image();
     img.onload = () => {
-      ctx.drawImage(img, 0, 0, containerWidth, containerHeight);
+      ctx.drawImage(img, 0, 0, wrapperWidth, wrapperHeight);
       saveState();
     };
     img.src = huidigeOpname.canvasData;
   } else {
     ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, containerWidth, containerHeight);
+    ctx.fillRect(0, 0, wrapperWidth, wrapperHeight);
     saveState();
   }
   
-  // Reset zoom state
-  canvasScale = 1;
-  canvasOffsetX = 0;
-  canvasOffsetY = 0;
+  scale = 1;
   updateZoomDisplay();
   
-  // Event listeners - VERBETERD MET POINTER EVENTS
-  canvas.addEventListener('pointerdown', startDrawing);
-  canvas.addEventListener('pointermove', draw);
-  canvas.addEventListener('pointerup', stopDrawing);
-  canvas.addEventListener('pointercancel', stopDrawing);
-  canvas.addEventListener('pointerleave', stopDrawing);
-  
-  // Touch events voor pinch zoom
-  container.addEventListener('touchstart', handleTouchStart, { passive: false });
-  container.addEventListener('touchmove', handleTouchMove, { passive: false });
-  container.addEventListener('touchend', handleTouchEnd, { passive: false });
+  // POINTER EVENTS voor Apple Pencil
+  canvas.addEventListener('pointerdown', onPointerDown);
+  canvas.addEventListener('pointermove', onPointerMove);
+  canvas.addEventListener('pointerup', onPointerUp);
+  canvas.addEventListener('pointercancel', onPointerUp);
 }
 
-function getCanvasPoint(e) {
-  const rect = canvas.getBoundingClientRect();
-  const x = (e.clientX - rect.left) * (canvas.width / rect.width) / (window.devicePixelRatio || 1);
-  const y = (e.clientY - rect.top) * (canvas.height / rect.height) / (window.devicePixelRatio || 1);
-  return { x, y };
-}
-
-function startDrawing(e) {
-  if (e.pointerType === 'touch' && e.isPrimary === false) return; // Negeer tweede vinger voor tekenen
-  if (isPinching || isPanning) return;
-  
+function onPointerDown(e) {
   e.preventDefault();
   isDrawing = true;
   
-  const point = getCanvasPoint(e);
-  ctx.beginPath();
-  ctx.moveTo(point.x, point.y);
+  const rect = canvas.getBoundingClientRect();
+  lastX = (e.clientX - rect.left) / scale;
+  lastY = (e.clientY - rect.top) / scale;
   
-  // Apple Pencil pressure support
-  const pressure = e.pressure || 0.5;
-  ctx.lineWidth = 2 + (pressure * 3); // 2-5px afhankelijk van druk
+  ctx.beginPath();
+  ctx.moveTo(lastX, lastY);
+  
+  // Apple Pencil pressure
+  const pressure = e.pressure > 0 ? e.pressure : 0.5;
+  ctx.lineWidth = 2 + (pressure * 4);
   ctx.strokeStyle = currentColor;
 }
 
-function draw(e) {
+function onPointerMove(e) {
   if (!isDrawing) return;
-  if (isPinching || isPanning) return;
-  
   e.preventDefault();
-  const point = getCanvasPoint(e);
   
-  // Apple Pencil pressure support
-  const pressure = e.pressure || 0.5;
-  ctx.lineWidth = 2 + (pressure * 3);
+  const rect = canvas.getBoundingClientRect();
+  const x = (e.clientX - rect.left) / scale;
+  const y = (e.clientY - rect.top) / scale;
   
-  ctx.lineTo(point.x, point.y);
+  // Apple Pencil pressure
+  const pressure = e.pressure > 0 ? e.pressure : 0.5;
+  ctx.lineWidth = 2 + (pressure * 4);
+  
+  ctx.lineTo(x, y);
   ctx.stroke();
+  
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  
+  lastX = x;
+  lastY = y;
 }
 
-function stopDrawing(e) {
+function onPointerUp(e) {
   if (!isDrawing) return;
-  
   e.preventDefault();
   isDrawing = false;
   saveState();
   saveCanvas();
-}
-
-// Touch handlers voor pinch zoom
-let initialPinchScale = 1;
-
-function handleTouchStart(e) {
-  if (e.touches.length === 2) {
-    e.preventDefault();
-    e.stopPropagation();
-    isPinching = true;
-    isDrawing = false;
-    lastPinchDist = getPinchDistance(e.touches);
-    initialPinchScale = canvasScale;
-  }
-}
-
-function handleTouchMove(e) {
-  if (e.touches.length === 2 && isPinching) {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    const dist = getPinchDistance(e.touches);
-    const scale = dist / lastPinchDist;
-    
-    canvasScale = Math.max(0.5, Math.min(4, initialPinchScale * scale));
-    
-    const container = document.getElementById('canvas-container');
-    const baseWidth = container.clientWidth;
-    const baseHeight = container.clientHeight;
-    
-    canvas.style.width = (baseWidth * canvasScale) + 'px';
-    canvas.style.height = (baseHeight * canvasScale) + 'px';
-    updateZoomDisplay();
-  }
-}
-
-function handleTouchEnd(e) {
-  if (e.touches.length < 2) {
-    isPinching = false;
-    if (e.touches.length === 0) {
-      initialPinchScale = canvasScale;
-    }
-  }
-}
-
-function getPinchDistance(touches) {
-  const dx = touches[0].clientX - touches[1].clientX;
-  const dy = touches[0].clientY - touches[1].clientY;
-  return Math.sqrt(dx * dx + dy * dy);
-}
-
-// Zoom functies - vereenvoudigd
-function zoomIn() {
-  canvasScale = Math.min(4, canvasScale * 1.25);
-  const container = document.getElementById('canvas-container');
-  const baseWidth = container.clientWidth;
-  const baseHeight = container.clientHeight;
-  
-  canvas.style.width = (baseWidth * canvasScale) + 'px';
-  canvas.style.height = (baseHeight * canvasScale) + 'px';
-  updateZoomDisplay();
-}
-
-function zoomOut() {
-  canvasScale = Math.max(0.5, canvasScale / 1.25);
-  const container = document.getElementById('canvas-container');
-  const baseWidth = container.clientWidth;
-  const baseHeight = container.clientHeight;
-  
-  canvas.style.width = (baseWidth * canvasScale) + 'px';
-  canvas.style.height = (baseHeight * canvasScale) + 'px';
-  updateZoomDisplay();
-}
-
-function resetZoom() {
-  canvasScale = 1;
-  const container = document.getElementById('canvas-container');
-  canvas.style.width = container.clientWidth + 'px';
-  canvas.style.height = container.clientHeight + 'px';
-  updateZoomDisplay();
-}
-
-function updateCanvasTransform() {
-  // Niet meer nodig - we gebruiken directe width/height
-}
-
-function updateZoomDisplay() {
-  document.getElementById('zoom-display').textContent = Math.round(canvasScale * 100) + '%';
 }
 
 // Canvas tools
@@ -767,8 +681,10 @@ function selectColor(btn) {
 
 function clearCanvas() {
   if (!confirm('Canvas wissen?')) return;
+  const w = canvas.width / (window.devicePixelRatio || 1);
+  const h = canvas.height / (window.devicePixelRatio || 1);
   ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, 1920, 1080);
+  ctx.fillRect(0, 0, w, h);
   saveState();
   saveCanvas();
 }
@@ -778,8 +694,10 @@ function undoCanvas() {
     historyStep--;
     const img = new Image();
     img.onload = () => {
-      ctx.clearRect(0, 0, 1920, 1080);
-      ctx.drawImage(img, 0, 0);
+      const w = canvas.width / (window.devicePixelRatio || 1);
+      const h = canvas.height / (window.devicePixelRatio || 1);
+      ctx.clearRect(0, 0, w, h);
+      ctx.drawImage(img, 0, 0, w, h);
     };
     img.src = drawingHistory[historyStep];
   }
@@ -804,16 +722,39 @@ function saveCanvas() {
   }
 }
 
+// Zoom functies - simpel
+function zoomIn() {
+  scale = Math.min(3, scale * 1.25);
+  canvas.style.transform = `scale(${scale})`;
+  canvas.style.transformOrigin = 'top left';
+  updateZoomDisplay();
+}
+
+function zoomOut() {
+  scale = Math.max(0.5, scale / 1.25);
+  canvas.style.transform = `scale(${scale})`;
+  canvas.style.transformOrigin = 'top left';
+  updateZoomDisplay();
+}
+
+function resetZoom() {
+  scale = 1;
+  canvas.style.transform = 'scale(1)';
+  updateZoomDisplay();
+}
+
+function updateZoomDisplay() {
+  document.getElementById('zoom-display').textContent = Math.round(scale * 100) + '%';
+}
+
 // ══ PDF EXPORT ══
 async function exportPDF() {
   try {
-    const loadingOverlay = document.getElementById('loading-overlay');
-    loadingOverlay.classList.add('show');
-    
+    document.getElementById('loading-overlay').classList.add('show');
     saveCurrentOpname();
+    
     const op = huidigeOpname;
     const f = op.formulier || {};
-    
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     
@@ -996,7 +937,7 @@ async function exportPDF() {
       y += 15;
       
       const imgWidth = contentWidth;
-      const imgHeight = (imgWidth / 16) * 9;
+      const imgHeight = (imgWidth / canvas.width) * canvas.height;
       
       if (y + imgHeight > pageHeight - margin) {
         doc.addPage();
@@ -1012,7 +953,7 @@ async function exportPDF() {
     
     doc.save(filename);
     
-    loadingOverlay.classList.remove('show');
+    document.getElementById('loading-overlay').classList.remove('show');
     alert('PDF succesvol geëxporteerd!');
     
   } catch (err) {
@@ -1024,45 +965,6 @@ async function exportPDF() {
 
 // ══ INIT ══
 renderStartLijst();
-
-// ══ SERVICE WORKER (PWA) ══
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./service-worker.js')
-      .then(reg => console.log('✓ Service Worker geregistreerd'))
-      .catch(err => console.log('✗ Service Worker fout:', err));
-  });
-}
-
-// PWA Install Prompt
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  
-  const installHint = document.createElement('div');
-  installHint.style.cssText = `
-    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-    background: var(--accent); color: white; padding: 12px 20px;
-    border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    font-size: 14px; z-index: 4000; cursor: pointer;
-    animation: slideUp 0.3s ease-out;
-  `;
-  installHint.innerHTML = '📱 Installeer app op thuisscherm';
-  installHint.onclick = () => {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === 'accepted') {
-        console.log('App geïnstalleerd!');
-      }
-      deferredPrompt = null;
-      installHint.remove();
-    });
-  };
-  
-  document.body.appendChild(installHint);
-  setTimeout(() => installHint.remove(), 10000);
-});
 </script>
 </body>
 </html>
