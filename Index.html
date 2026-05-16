@@ -181,11 +181,11 @@
                 <button class="toggle-btn" onclick="selectToggle(this,'rekenzones')">3</button>
               </div>
             </div>
-            <div class="field"><label>Gebouwhoogte (m)</label><input type="text" id="f-hoogte" placeholder="6.5"></div>
+            <div class="field"><label>Gebouwhoogte (m)</label><input type="text" id="f-hoogte" inputmode="numeric" placeholder="6.5"></div>
           </div>
           <div class="row-2">
-            <div class="field"><label>Bouwjaar</label><input type="text" id="f-bouwjaar" placeholder="1975"></div>
-            <div class="field"><label>Renovatiejaar</label><input type="text" id="f-renovatiejaar" placeholder="2010"></div>
+            <div class="field"><label>Bouwjaar</label><input type="text" id="f-bouwjaar" inputmode="numeric" placeholder="1975"></div>
+            <div class="field"><label>Renovatiejaar</label><input type="text" id="f-renovatiejaar" inputmode="numeric" placeholder="2010"></div>
           </div>
           <div class="field">
             <label>Capaciteit vloer</label>
@@ -214,14 +214,14 @@
         </div>
         <div class="section-body collapsed">
           <div class="row-3">
-            <div class="field"><label>1e bouwlaag (m²)</label><input type="text" id="f-opp1" placeholder="0"></div>
-            <div class="field"><label>2e bouwlaag (m²)</label><input type="text" id="f-opp2" placeholder="0"></div>
-            <div class="field"><label>3e bouwlaag (m²)</label><input type="text" id="f-opp3" placeholder="0"></div>
+            <div class="field"><label>1e bouwlaag (m²)</label><input type="text" id="f-opp1" inputmode="numeric" placeholder="0"></div>
+            <div class="field"><label>2e bouwlaag (m²)</label><input type="text" id="f-opp2" inputmode="numeric" placeholder="0"></div>
+            <div class="field"><label>3e bouwlaag (m²)</label><input type="text" id="f-opp3" inputmode="numeric" placeholder="0"></div>
           </div>
           <div class="row-3">
-            <div class="field"><label>4e bouwlaag (m²)</label><input type="text" id="f-opp4" placeholder="0"></div>
-            <div class="field"><label>Overige bouwlagen (m²)</label><input type="text" id="f-opp-overig" placeholder="0"></div>
-            <div class="field"><label>Aantal woonfuncties</label><input type="text" id="f-woonfuncties" placeholder="1"></div>
+            <div class="field"><label>4e bouwlaag (m²)</label><input type="text" id="f-opp4" inputmode="numeric" placeholder="0"></div>
+            <div class="field"><label>Overige bouwlagen (m²)</label><input type="text" id="f-opp-overig" inputmode="numeric" placeholder="0"></div>
+            <div class="field"><label>Aantal woonfuncties</label><input type="text" id="f-woonfuncties" inputmode="numeric" placeholder="1"></div>
           </div>
         </div>
       </div>
@@ -326,8 +326,8 @@
             </div>
           </div>
           <div class="row-2">
-            <div class="field"><label>Leidinglengte keuken (m)</label><input type="text" id="f-tap-lk" placeholder="0"></div>
-            <div class="field"><label>Leidinglengte badkamer (m)</label><input type="text" id="f-tap-lb" placeholder="0"></div>
+            <div class="field"><label>Leidinglengte keuken (m)</label><input type="text" id="f-tap-lk" inputmode="numeric" placeholder="0"></div>
+            <div class="field"><label>Leidinglengte badkamer (m)</label><input type="text" id="f-tap-lb" inputmode="numeric" placeholder="0"></div>
           </div>
           <div class="field"><label>Opmerkingen</label><textarea id="f-tap-opm" placeholder="—"></textarea></div>
         </div>
@@ -359,7 +359,7 @@
             <div class="field"><label>Type (anders dan compressie)</label><input type="text" id="f-koel-type" placeholder="—"></div>
             <div class="field"><label>Afgifte (anders dan airco)</label><input type="text" id="f-koel-afgifte" placeholder="—"></div>
           </div>
-          <div class="field"><label>Vermogen</label><input type="text" id="f-koel-vermogen" placeholder="kW"></div>
+          <div class="field"><label>Vermogen</label><input type="text" id="f-koel-vermogen" inputmode="numeric" placeholder="kW"></div>
           <div class="field"><label>Opmerkingen</label><textarea id="f-koel-opm" placeholder="—"></textarea></div>
         </div>
       </div>
@@ -379,9 +379,9 @@
             </div>
           </div>
           <div class="row-3">
-            <div class="field"><label>Aantal panelen</label><input type="text" id="f-pv-aantal" placeholder="0"></div>
+            <div class="field"><label>Aantal panelen</label><input type="text" id="f-pv-aantal" inputmode="numeric" placeholder="0"></div>
             <div class="field"><label>Modelnaam</label><input type="text" id="f-pv-model" placeholder="—"></div>
-            <div class="field"><label>Bouwjaar</label><input type="text" id="f-pv-bouwjaar" placeholder="—"></div>
+            <div class="field"><label>Bouwjaar</label><input type="text" id="f-pv-bouwjaar" inputmode="numeric" placeholder="—"></div>
           </div>
           <div class="field"><label>Oriëntatie</label><input type="text" id="f-pv-ori" placeholder="Zuid / Oost-West / etc."></div>
           <div class="field"><label>Opmerkingen</label><textarea id="f-pv-opm" placeholder="—"></textarea></div>
@@ -615,7 +615,7 @@
     tr.innerHTML =
       '<td style="white-space:nowrap"><div class="cell-toggle" style="flex-wrap:nowrap" data-c="naam">' + CONSTRUCTIE_NAMEN.map(naamBtn).join('') + '</div></td>' +
       '<td><div class="cell-toggle" data-c="isolatie">' + isoBtn('Ja') + isoBtn('Nee') + isoBtn('Onbekend') + '</div></td>' +
-      '<td><input type="text" data-c="dikte" value="' + (data&&data.dikte?data.dikte:'') + '" placeholder="mm of bouwjaar"></td>' +
+      '<td><input type="text" data-c="dikte" inputmode="numeric" value="' + (data&&data.dikte?data.dikte:'') + '" placeholder="mm of bouwjaar"></td>' +
       '<td><input type="text" data-c="opmerkingen" value="' + (data&&data.opmerkingen?data.opmerkingen:'') + '" placeholder="—"></td>';
 
     tbody.appendChild(tr);
@@ -666,7 +666,7 @@
           '<div class="toggle-group ag-ori-group">' + ['Voor','Achter','Links','Rechts'].map(oriBtn).join('') + '</div>' +
         '</div>' +
         '<div class="field" style="flex:1"><label>Ag totaal (m²)</label>' +
-          '<input type="text" data-ag="ag-totaal" value="' + (data&&data['ag-totaal']?data['ag-totaal']:'') + '" placeholder="m²">' +
+          '<input type="text" data-ag="ag-totaal" inputmode="numeric" value="' + (data&&data['ag-totaal']?data['ag-totaal']:'') + '" placeholder="m²">' +
         '</div>' +
         '<button onclick="this.closest(\'.ag-zone\').remove()" class="btn btn-icon btn-sm" title="Verwijderen"><i class="ti ti-trash"></i></button>' +
       '</div>' +
@@ -706,7 +706,7 @@
     tr.innerHTML =
       '<td><input type="text" data-agr="type" value="' + type + '" placeholder="Glas / Paneel / Deur"></td>' +
       '<td><input type="text" data-agr="naam" value="' + naam + '" placeholder="A"></td>' +
-      '<td><input type="text" data-agr="ag"   value="' + ag   + '" placeholder="m²"></td>' +
+      '<td><input type="text" data-agr="ag" inputmode="numeric"   value="' + ag   + '" placeholder="m²"></td>' +
       '<td><button class="dup-btn" onclick="duplicateAgRow(this)" title="Dupliceer rij"><i class="ti ti-copy"></i></button></td>';
     tbody.appendChild(tr);
   }
@@ -723,7 +723,7 @@
     document.querySelectorAll('#ag-zones .ag-zone').forEach(div => {
       const selOri = div.querySelector('.ag-ori-group .toggle-btn.selected');
       const ori = selOri ? selOri.textContent : '';
-      const agTotaal = div.querySelector('[data-ag="ag-totaal"]').value.trim();
+      const agTotaal = div.querySelector('[data-ag="ag-totaal" inputmode="numeric"]').value.trim();
       const rows = [];
       div.querySelectorAll('.ag-rows tr').forEach(tr => {
         const obj = {};
