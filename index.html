@@ -10,267 +10,111 @@
 
     :root {
       --bg: #ffffff;
-      --bg-secondary: #f5f5f3;
-      --bg-tertiary: #eeede9;
-      --text: #1a1a18;
-      --text-secondary: #6b6b67;
-      --border: rgba(0,0,0,0.12);
-      --border-strong: rgba(0,0,0,0.25);
-      --accent: #1a1a18;
+      --bg-secondary: #f0f4f0;
+      --bg-tertiary: #e8f0e8;
+      --text: #1a2332;
+      --text-secondary: #4a5a6a;
+      --border: rgba(26,35,50,0.12);
+      --border-strong: rgba(26,35,50,0.25);
+      --accent: #3db54a;
       --accent-text: #ffffff;
-      --danger: #a32d2d;
-      --danger-border: rgba(163,45,45,0.35);
-      --radius-md: 8px;
-      --radius-lg: 12px;
+      --navy: #1a2332;
+      --navy-text: #ffffff;
+      --danger: #c0392b;
+      --danger-border: rgba(192,57,43,0.35);
+      --radius-md: 6px;
+      --radius-lg: 10px;
       --font: -apple-system, 'Helvetica Neue', Arial, sans-serif;
     }
 
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #1c1c1a;
-        --bg-secondary: #252523;
-        --bg-tertiary: #2e2e2b;
-        --text: #f0efe9;
-        --text-secondary: #9a9994;
-        --border: rgba(255,255,255,0.12);
-        --border-strong: rgba(255,255,255,0.25);
-        --accent: #f0efe9;
-        --accent-text: #1c1c1a;
-        --danger: #e87070;
-        --danger-border: rgba(232,112,112,0.35);
-      }
-    }
-
-    body {
-      font-family: var(--font);
-      font-size: 15px;
-      color: var(--text);
-      background: var(--bg-tertiary);
-      min-height: 100vh;
-    }
-
-    .app { max-width: 680px; margin: 0 auto; background: var(--bg-tertiary); min-height: 100vh; }
-
+    body { font-family: var(--font); font-size: 15px; color: var(--text); background: var(--bg-secondary); min-height: 100vh; }
+    .app { max-width: 1100px; margin: 0 auto; background: var(--bg-tertiary); min-height: 100vh; }
     .screen { display: none; }
     .screen.active { display: flex; flex-direction: column; min-height: 100vh; }
 
-    /* Header */
-    .header {
-      padding: 14px 16px;
-      border-bottom: 0.5px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: var(--bg);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .header-title { flex: 1; font-size: 16px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .header-sub { font-size: 12px; color: var(--text-secondary); margin-top: 1px; }
+    .header { padding: 14px 24px; border-bottom: none; display: flex; align-items: center; gap: 10px; background: var(--navy); position: sticky; top: 0; z-index: 100; }
+    .header-title { flex: 1; font-size: 17px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #ffffff; }
+    .header-sub { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 1px; }
 
-    /* Buttons */
-    .btn {
-      padding: 9px 16px;
-      border-radius: var(--radius-md);
-      border: 0.5px solid var(--border-strong);
-      background: var(--bg);
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      color: var(--text);
-      font-family: var(--font);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: opacity 0.15s;
-    }
+    .btn { padding: 9px 18px; border-radius: var(--radius-md); border: 0.5px solid var(--border-strong); background: var(--bg); font-size: 14px; font-weight: 500; cursor: pointer; color: var(--text); font-family: var(--font); display: inline-flex; align-items: center; gap: 6px; transition: opacity 0.15s; }
+    .header .btn:not(.btn-primary) { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: #ffffff; }
+    .header .btn:not(.btn-primary):hover { background: rgba(255,255,255,0.2); }
     .btn:active { opacity: 0.7; }
     .btn-primary { background: var(--accent); color: var(--accent-text); border-color: transparent; }
     .btn-danger { color: var(--danger); border-color: var(--danger-border); }
-    .btn-sm { padding: 7px 12px; font-size: 13px; }
+    .btn-sm { padding: 7px 13px; font-size: 13px; }
     .btn-icon { padding: 8px 10px; }
 
-    /* Project list */
-    .list-body { flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
-
-    .project-card {
-      background: var(--bg);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 14px 16px;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .project-card:hover { background: var(--bg-secondary); }
-    .project-card .p-adres { font-size: 15px; font-weight: 600; }
-    .project-card .p-meta { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+    .list-body { flex: 1; padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+    .project-card { background: var(--bg); border: 0.5px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--radius-lg); padding: 16px 20px; cursor: pointer; transition: background 0.15s; }
+    .project-card:hover { background: var(--bg-tertiary); }
+    .project-card .p-adres { font-size: 16px; font-weight: 600; }
+    .project-card .p-meta { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
     .project-card .p-row { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+    .badge { font-size: 11px; padding: 3px 9px; border-radius: 20px; background: rgba(61,181,74,0.12); color: #2a8a35; border: 0.5px solid rgba(61,181,74,0.3); font-weight: 500; }
+    .empty-state { text-align: center; padding: 100px 24px; color: var(--text-secondary); }
+    .empty-state .ti { font-size: 52px; display: block; margin-bottom: 16px; opacity: 0.3; }
+    .empty-state p { font-size: 15px; line-height: 1.6; }
 
-    .badge {
-      font-size: 11px;
-      padding: 3px 9px;
-      border-radius: 20px;
-      background: var(--bg-secondary);
-      color: var(--text-secondary);
-      border: 0.5px solid var(--border);
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 80px 24px;
-      color: var(--text-secondary);
-    }
-    .empty-state .ti { font-size: 48px; display: block; margin-bottom: 16px; opacity: 0.3; }
-    .empty-state p { font-size: 14px; line-height: 1.6; }
-
-    /* Form */
-    .form-body { flex: 1; padding: 16px; padding-bottom: 90px; display: flex; flex-direction: column; gap: 12px; }
-
-    .section {
-      background: var(--bg);
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-    }
-    .section-header {
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      background: var(--bg-secondary);
-      user-select: none;
-    }
-    .section-header:hover { background: var(--bg-tertiary); }
-    .section-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary); display: flex; align-items: center; gap: 7px; }
-    .section-body { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+    .form-body { flex: 1; padding: 24px; padding-bottom: 90px; display: flex; flex-direction: column; gap: 14px; }
+    .section { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+    .section-header { padding: 13px 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; background: var(--navy); user-select: none; }
+    .section-header:hover { background: #22304a; }
+    .section-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(255,255,255,0.85); display: flex; align-items: center; gap: 7px; }
+    .section-body { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
     .section-body.collapsed { display: none; }
-
-    .chevron { font-size: 16px; color: var(--text-secondary); transition: transform 0.2s; }
+    .chevron { font-size: 16px; color: rgba(255,255,255,0.6); transition: transform 0.2s; }
     .chevron.open { transform: rotate(180deg); }
 
-    /* Fields */
-    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field { display: flex; flex-direction: column; gap: 7px; }
     .field label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); }
-    .field input,
-    .field textarea {
-      width: 100%;
-      padding: 12px 14px;
-      border: 0.5px solid var(--border-strong);
-      border-radius: var(--radius-md);
-      font-size: 16px;
-      font-family: var(--font);
-      color: var(--text);
-      background: var(--bg);
-    }
-    .field input:focus,
-    .field textarea:focus {
-      outline: none;
-      border-color: var(--text);
-      box-shadow: 0 0 0 3px rgba(0,0,0,0.08);
-    }
-    @media (prefers-color-scheme: dark) {
-      .field input:focus, .field textarea:focus { box-shadow: 0 0 0 3px rgba(255,255,255,0.08); }
-    }
+    .field input, .field textarea { width: 100%; padding: 12px 16px; border: 0.5px solid var(--border-strong); border-radius: var(--radius-md); font-size: 16px; font-family: var(--font); color: var(--text); background: var(--bg); }
+    .field input:focus, .field textarea:focus { outline: none; border-color: var(--text); box-shadow: 0 0 0 3px rgba(0,0,0,0.07); }
+    @media (prefers-color-scheme: dark) { .field input:focus, .field textarea:focus { box-shadow: 0 0 0 3px rgba(255,255,255,0.07); } }
     .field textarea { resize: vertical; min-height: 90px; line-height: 1.5; }
 
-    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+    /* Toggle buttons */
+    .toggle-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    .toggle-btn { padding: 11px 20px; border-radius: var(--radius-md); border: 0.5px solid var(--border-strong); background: var(--bg); font-size: 15px; font-family: var(--font); color: var(--text); cursor: pointer; transition: all 0.15s; user-select: none; -webkit-user-select: none; }
+    .toggle-btn:hover { background: var(--bg-secondary); }
+    .toggle-btn.selected { background: var(--accent); color: var(--accent-text); border-color: var(--accent); font-weight: 600; }
+
+    /* Smaller toggles for table cells */
+    .cell-toggle { display: flex; gap: 4px; flex-wrap: wrap; }
+    .cell-toggle .toggle-btn { padding: 7px 12px; font-size: 13px; }
+
+    /* Duplicate button */
+    .dup-btn { padding: 6px 8px; border: 0.5px solid var(--border); border-radius: 6px; background: none; color: var(--text-secondary); cursor: pointer; font-size: 14px; display: inline-flex; align-items: center; }
+    .dup-btn:hover { background: var(--bg-secondary); color: var(--text); }
 
     /* Tables */
     .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     table.ftable { width: 100%; border-collapse: collapse; font-size: 14px; }
-    table.ftable th {
-      text-align: left;
-      padding: 8px 8px;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      border-bottom: 0.5px solid var(--border);
-      white-space: nowrap;
-    }
-    table.ftable td { padding: 5px 4px; border-bottom: 0.5px solid var(--border); vertical-align: middle; }
-    table.ftable input {
-      width: 100%;
-      padding: 9px 10px;
-      border: 0.5px solid var(--border-strong);
-      border-radius: 6px;
-      font-size: 15px;
-      font-family: var(--font);
-      color: var(--text);
-      background: var(--bg);
-      min-width: 80px;
-    }
+    table.ftable th { text-align: left; padding: 9px 10px; font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 0.5px solid var(--border); white-space: nowrap; }
+    table.ftable td { padding: 6px 4px; border-bottom: 0.5px solid var(--border); vertical-align: middle; }
+    table.ftable input { width: 100%; padding: 9px 12px; border: 0.5px solid var(--border-strong); border-radius: 6px; font-size: 15px; font-family: var(--font); color: var(--text); background: var(--bg); min-width: 80px; }
     table.ftable input:focus { outline: none; border-color: var(--text); }
 
-    .add-row-btn {
-      font-size: 13px;
-      color: var(--text-secondary);
-      border: none;
-      background: none;
-      cursor: pointer;
-      padding: 8px 0;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-family: var(--font);
-    }
+    .add-row-btn { font-size: 13px; color: var(--text-secondary); border: none; background: none; cursor: pointer; padding: 8px 0; display: inline-flex; align-items: center; gap: 5px; font-family: var(--font); }
     .add-row-btn:hover { color: var(--text); }
 
-    /* Ag zones */
-    .ag-zone {
-      border: 0.5px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 12px;
-      margin-bottom: 10px;
-    }
-    .ag-zone-header { display: flex; align-items: flex-end; gap: 8px; margin-bottom: 12px; }
+    .ag-zone { border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 16px; margin-bottom: 12px; }
+    .ag-zone-header { display: flex; align-items: flex-end; gap: 10px; margin-bottom: 14px; }
     .ag-zone-header .field { flex: 1; }
 
-    /* Bottom bar */
-    .bottom-bar {
-      position: fixed;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      max-width: 680px;
-      padding: 12px 16px;
-      background: var(--bg);
-      border-top: 0.5px solid var(--border);
-      display: flex;
-      gap: 10px;
-      z-index: 100;
-    }
+    .bottom-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 1100px; padding: 13px 24px; background: var(--navy); border-top: none; display: flex; gap: 10px; z-index: 100; }
 
-    /* Toast */
-    .toast {
-      position: fixed;
-      bottom: 80px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--text);
-      color: var(--accent-text);
-      padding: 10px 20px;
-      border-radius: var(--radius-md);
-      font-size: 14px;
-      z-index: 200;
-      opacity: 0;
-      transition: opacity 0.2s;
-      pointer-events: none;
-      white-space: nowrap;
-    }
+    .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--text); color: var(--accent-text); padding: 10px 22px; border-radius: var(--radius-md); font-size: 14px; z-index: 200; opacity: 0; transition: opacity 0.2s; pointer-events: none; white-space: nowrap; }
     .toast.show { opacity: 1; }
+    @media (prefers-color-scheme: dark) { .toast { color: var(--bg); } }
 
-    @media (prefers-color-scheme: dark) {
-      .toast { color: var(--bg); }
-    }
-
-    /* Responsive */
-    @media (max-width: 480px) {
-      .row-2 { grid-template-columns: 1fr; }
+    @media (max-width: 700px) {
+      .row-2, .row-3 { grid-template-columns: 1fr; }
+      .form-body, .list-body { padding: 14px; }
+      .header { padding: 12px 14px; }
     }
   </style>
 </head>
@@ -281,8 +125,8 @@
   <!-- Projectenoverzicht -->
   <div id="screen-list" class="screen active">
     <div class="header">
-      <i class="ti ti-bolt" style="font-size:22px"></i>
-      <div class="header-title">Energielabel Opnames</div>
+      <i class="ti ti-leaf" style="font-size:24px;color:#3db54a"></i>
+      <div class="header-title">Het Energieproject &nbsp;<span style="font-weight:400;opacity:0.7;font-size:14px">| Opnames</span></div>
       <button class="btn btn-primary btn-sm" onclick="openNewProject()">
         <i class="ti ti-plus"></i>Nieuwe opname
       </button>
@@ -313,13 +157,10 @@
         </div>
         <div class="section-body">
           <div class="field"><label>Straat + huisnummer</label><input type="text" id="f-adres" placeholder="Dorpsstraat 12"></div>
-          <div class="row-2">
+          <div class="row-3">
             <div class="field"><label>Postcode</label><input type="text" id="f-postcode" placeholder="5612 AB"></div>
             <div class="field"><label>Plaats</label><input type="text" id="f-plaats" placeholder="Eindhoven"></div>
-          </div>
-          <div class="row-2">
             <div class="field"><label>Opnamedatum</label><input type="text" id="f-datum" placeholder="16-05-2025"></div>
-            <div class="field"><label>Opgenomen door</label><input type="text" id="f-opnemer" placeholder="Naam"></div>
           </div>
         </div>
       </div>
@@ -328,19 +169,40 @@
       <div class="section">
         <div class="section-header" onclick="toggleSection(this)">
           <div class="section-title"><i class="ti ti-building"></i>Rekenzones &amp; Gebouw</div>
-          <i class="ti ti-chevron-down chevron open"></i>
+          <i class="ti ti-chevron-down chevron"></i>
         </div>
-        <div class="section-body">
+        <div class="section-body collapsed">
           <div class="row-2">
-            <div class="field"><label>Aantal rekenzones</label><input type="text" id="f-rekenzones" placeholder="1 / 2 / 3"></div>
+            <div class="field">
+              <label>Aantal rekenzones</label>
+              <div class="toggle-group" id="tg-rekenzones">
+                <button class="toggle-btn" onclick="selectToggle(this,'rekenzones')">1</button>
+                <button class="toggle-btn" onclick="selectToggle(this,'rekenzones')">2</button>
+                <button class="toggle-btn" onclick="selectToggle(this,'rekenzones')">3</button>
+              </div>
+            </div>
             <div class="field"><label>Gebouwhoogte (m)</label><input type="text" id="f-hoogte" placeholder="6.5"></div>
           </div>
           <div class="row-2">
             <div class="field"><label>Bouwjaar</label><input type="text" id="f-bouwjaar" placeholder="1975"></div>
             <div class="field"><label>Renovatiejaar</label><input type="text" id="f-renovatiejaar" placeholder="2010"></div>
           </div>
-          <div class="field"><label>Capaciteit vloer</label><input type="text" id="f-cap-vloer" placeholder="Licht / Zwaar / Zeer zwaar"></div>
-          <div class="field"><label>Capaciteit gevels</label><input type="text" id="f-cap-gevel" placeholder="Licht / Zwaar / Zeer zwaar"></div>
+          <div class="field">
+            <label>Capaciteit vloer</label>
+            <div class="toggle-group" id="tg-cap-vloer">
+              <button class="toggle-btn" onclick="selectToggle(this,'cap-vloer')">Licht</button>
+              <button class="toggle-btn" onclick="selectToggle(this,'cap-vloer')">Zwaar</button>
+              <button class="toggle-btn" onclick="selectToggle(this,'cap-vloer')">Zeer zwaar</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Capaciteit gevels</label>
+            <div class="toggle-group" id="tg-cap-gevel">
+              <button class="toggle-btn" onclick="selectToggle(this,'cap-gevel')">Licht</button>
+              <button class="toggle-btn" onclick="selectToggle(this,'cap-gevel')">Zwaar</button>
+              <button class="toggle-btn" onclick="selectToggle(this,'cap-gevel')">Zeer zwaar</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -348,18 +210,16 @@
       <div class="section">
         <div class="section-header" onclick="toggleSection(this)">
           <div class="section-title"><i class="ti ti-ruler-2"></i>Gebruiksoppervlakte</div>
-          <i class="ti ti-chevron-down chevron open"></i>
+          <i class="ti ti-chevron-down chevron"></i>
         </div>
-        <div class="section-body">
-          <div class="row-2">
+        <div class="section-body collapsed">
+          <div class="row-3">
             <div class="field"><label>1e bouwlaag (m²)</label><input type="text" id="f-opp1" placeholder="0"></div>
             <div class="field"><label>2e bouwlaag (m²)</label><input type="text" id="f-opp2" placeholder="0"></div>
-          </div>
-          <div class="row-2">
             <div class="field"><label>3e bouwlaag (m²)</label><input type="text" id="f-opp3" placeholder="0"></div>
-            <div class="field"><label>4e bouwlaag (m²)</label><input type="text" id="f-opp4" placeholder="0"></div>
           </div>
-          <div class="row-2">
+          <div class="row-3">
+            <div class="field"><label>4e bouwlaag (m²)</label><input type="text" id="f-opp4" placeholder="0"></div>
             <div class="field"><label>Overige bouwlagen (m²)</label><input type="text" id="f-opp-overig" placeholder="0"></div>
             <div class="field"><label>Aantal woonfuncties</label><input type="text" id="f-woonfuncties" placeholder="1"></div>
           </div>
@@ -370,19 +230,17 @@
       <div class="section">
         <div class="section-header" onclick="toggleSection(this)">
           <div class="section-title"><i class="ti ti-layers-intersect"></i>Constructies</div>
-          <i class="ti ti-chevron-down chevron open"></i>
+          <i class="ti ti-chevron-down chevron"></i>
         </div>
-        <div class="section-body">
+        <div class="section-body collapsed">
           <div class="table-wrap">
             <table class="ftable">
               <thead>
                 <tr>
-                  <th style="min-width:120px">Naam bouwdeel</th>
-                  <th style="min-width:100px">Type</th>
-                  <th style="min-width:90px">Isolatie</th>
-                  <th style="min-width:90px">Begrenzing</th>
-                  <th style="min-width:85px">Dikte (mm)</th>
-                  <th style="min-width:110px">Opmerkingen</th>
+                  <th style="white-space:nowrap">Naam bouwdeel</th>
+                  <th style="min-width:240px">Isolatie</th>
+                  <th style="min-width:150px">Dikte isolatie (mm) of bouwjaar</th>
+                  <th style="min-width:160px">Opmerkingen</th>
                 </tr>
               </thead>
               <tbody id="constructies-body"></tbody>
@@ -398,14 +256,24 @@
       <div class="section">
         <div class="section-header" onclick="toggleSection(this)">
           <div class="section-title"><i class="ti ti-flame"></i>Verwarming</div>
-          <i class="ti ti-chevron-down chevron open"></i>
+          <i class="ti ti-chevron-down chevron"></i>
         </div>
-        <div class="section-body">
-          <div class="field"><label>Aantal opwekkers</label><input type="text" id="f-verw-aantal" placeholder="1 / 2"></div>
-          <div class="field"><label>Type opwekker 1 (anders dan hr107)</label><input type="text" id="f-verw-type1" placeholder="Bijv. warmtepomp"></div>
-          <div class="field"><label>Type opwekker 2</label><input type="text" id="f-verw-type2" placeholder="—"></div>
-          <div class="field"><label>Afgifte (anders dan radiatoren)</label><input type="text" id="f-verw-afgifte" placeholder="Bijv. vloerverwarming"></div>
-          <div class="field"><label>Regeling (anders dan kamerthermostaat)</label><input type="text" id="f-verw-regeling" placeholder="Bijv. weersafhankelijk"></div>
+        <div class="section-body collapsed">
+          <div class="field">
+            <label>Aantal opwekkers</label>
+            <div class="toggle-group" id="tg-verw-aantal">
+              <button class="toggle-btn" onclick="selectToggle(this,'verw-aantal')">1</button>
+              <button class="toggle-btn" onclick="selectToggle(this,'verw-aantal')">2</button>
+            </div>
+          </div>
+          <div class="row-2">
+            <div class="field"><label>Type opwekker 1 (anders dan hr107)</label><input type="text" id="f-verw-type1" placeholder="Bijv. warmtepomp"></div>
+            <div class="field"><label>Type opwekker 2</label><input type="text" id="f-verw-type2" placeholder="—"></div>
+          </div>
+          <div class="row-2">
+            <div class="field"><label>Afgifte (anders dan radiatoren)</label><input type="text" id="f-verw-afgifte" placeholder="Bijv. vloerverwarming"></div>
+            <div class="field"><label>Regeling (anders dan kamerthermostaat)</label><input type="text" id="f-verw-regeling" placeholder="Bijv. weersafhankelijk"></div>
+          </div>
           <div class="field"><label>Opmerkingen</label><textarea id="f-verw-opm" placeholder="—"></textarea></div>
         </div>
       </div>
@@ -414,10 +282,18 @@
       <div class="section">
         <div class="section-header" onclick="toggleSection(this)">
           <div class="section-title"><i class="ti ti-wind"></i>Ventilatie</div>
-          <i class="ti ti-chevron-down chevron open"></i>
+          <i class="ti ti-chevron-down chevron"></i>
         </div>
-        <div class="section-body">
-          <div class="field"><label>Type systeem</label><input type="text" id="f-vent-type" placeholder="A / B / C / D"></div>
+        <div class="section-body collapsed">
+          <div class="field">
+            <label>Type systeem</label>
+            <div class="toggle-group" id="tg-vent-type">
+              <button class="toggle-btn" onclick="selectToggle(this,'vent-type')">A</button>
+              <button class="toggle-btn" onclick="selectToggle(this,'vent-type')">B</button>
+              <button class="toggle-btn" onclick="selectToggle(this,'vent-type')">C</button>
+              <button class="toggle-btn" onclick="selectToggle(this,'vent-type')">D</button>
+            </div>
+          </div>
           <div class="field"><label>Subtype</label><input type="text" id="f-vent-subtype" placeholder="—"></div>
           <div class="field"><label>Opmerkingen (gegevens niet forfetair)</label><textarea id="f-vent-opm" placeholder="—"></textarea></div>
         </div>
@@ -427,13 +303,28 @@
       <div class="section">
         <div class="section-header" onclick="toggleSection(this)">
           <div class="section-title"><i class="ti ti-droplet"></i>Tapwater</div>
-          <i class="ti ti-chevron-down chevron open"></i>
+          <i class="ti ti-chevron-down chevron"></i>
         </div>
-        <div class="section-body">
-          <div class="field"><label>Aantal opwekkers</label><input type="text" id="f-tap-aantal" placeholder="één / twee"></div>
-          <div class="field"><label>Type opwekker 1 (anders dan hr107)</label><input type="text" id="f-tap-type1" placeholder="—"></div>
-          <div class="field"><label>Type opwekker 2 (anders dan forfetaire keukenboiler)</label><input type="text" id="f-tap-type2" placeholder="—"></div>
-          <div class="field"><label>Aantal keukens / badkamers &gt;1</label><input type="text" id="f-tap-aantalkb" placeholder="Keuken / badkamer"></div>
+        <div class="section-body collapsed">
+          <div class="field">
+            <label>Aantal opwekkers</label>
+            <div class="toggle-group" id="tg-tap-aantal">
+              <button class="toggle-btn" onclick="selectToggle(this,'tap-aantal')">Één</button>
+              <button class="toggle-btn" onclick="selectToggle(this,'tap-aantal')">Twee</button>
+            </div>
+          </div>
+          <div class="row-2">
+            <div class="field"><label>Type opwekker 1 (anders dan hr107)</label><input type="text" id="f-tap-type1" placeholder="—"></div>
+            <div class="field"><label>Type opwekker 2 (anders dan forfetaire keukenboiler)</label><input type="text" id="f-tap-type2" placeholder="—"></div>
+          </div>
+          <div class="field">
+            <label>Aantal keukens / badkamers &gt;1</label>
+            <div class="toggle-group" id="tg-tap-aantalkb">
+              <button class="toggle-btn" onclick="selectToggle(this,'tap-aantalkb')">Keuken</button>
+              <button class="toggle-btn" onclick="selectToggle(this,'tap-aantalkb')">Badkamer</button>
+              <button class="toggle-btn" onclick="selectToggle(this,'tap-aantalkb')">Keuken + badkamer</button>
+            </div>
+          </div>
           <div class="row-2">
             <div class="field"><label>Leidinglengte keuken (m)</label><input type="text" id="f-tap-lk" placeholder="0"></div>
             <div class="field"><label>Leidinglengte badkamer (m)</label><input type="text" id="f-tap-lb" placeholder="0"></div>
@@ -446,13 +337,28 @@
       <div class="section">
         <div class="section-header" onclick="toggleSection(this)">
           <div class="section-title"><i class="ti ti-snowflake"></i>Koeling</div>
-          <i class="ti ti-chevron-down chevron open"></i>
+          <i class="ti ti-chevron-down chevron"></i>
         </div>
-        <div class="section-body">
-          <div class="field"><label>Aanwezig</label><input type="text" id="f-koel-aanwezig" placeholder="Ja / Nee"></div>
-          <div class="field"><label>Aantal opwekkers</label><input type="text" id="f-koel-aantal" placeholder="één / twee / drie"></div>
-          <div class="field"><label>Type (anders dan compressie)</label><input type="text" id="f-koel-type" placeholder="—"></div>
-          <div class="field"><label>Afgifte (anders dan airco)</label><input type="text" id="f-koel-afgifte" placeholder="—"></div>
+        <div class="section-body collapsed">
+          <div class="field">
+            <label>Aanwezig</label>
+            <div class="toggle-group" id="tg-koel-aanwezig">
+              <button class="toggle-btn" onclick="selectToggle(this,'koel-aanwezig')">Ja</button>
+              <button class="toggle-btn" onclick="selectToggle(this,'koel-aanwezig')">Nee</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>Aantal opwekkers</label>
+            <div class="toggle-group" id="tg-koel-aantal">
+              <button class="toggle-btn" onclick="selectToggle(this,'koel-aantal')">1</button>
+              <button class="toggle-btn" onclick="selectToggle(this,'koel-aantal')">2</button>
+              <button class="toggle-btn" onclick="selectToggle(this,'koel-aantal')">3</button>
+            </div>
+          </div>
+          <div class="row-2">
+            <div class="field"><label>Type (anders dan compressie)</label><input type="text" id="f-koel-type" placeholder="—"></div>
+            <div class="field"><label>Afgifte (anders dan airco)</label><input type="text" id="f-koel-afgifte" placeholder="—"></div>
+          </div>
           <div class="field"><label>Vermogen</label><input type="text" id="f-koel-vermogen" placeholder="kW"></div>
           <div class="field"><label>Opmerkingen</label><textarea id="f-koel-opm" placeholder="—"></textarea></div>
         </div>
@@ -462,15 +368,21 @@
       <div class="section">
         <div class="section-header" onclick="toggleSection(this)">
           <div class="section-title"><i class="ti ti-solar-panel"></i>PV (Zonnepanelen)</div>
-          <i class="ti ti-chevron-down chevron open"></i>
+          <i class="ti ti-chevron-down chevron"></i>
         </div>
-        <div class="section-body">
-          <div class="field"><label>Aanwezig</label><input type="text" id="f-pv-aanwezig" placeholder="Ja / Nee"></div>
-          <div class="row-2">
+        <div class="section-body collapsed">
+          <div class="field">
+            <label>Aanwezig</label>
+            <div class="toggle-group" id="tg-pv-aanwezig">
+              <button class="toggle-btn" onclick="selectToggle(this,'pv-aanwezig')">Ja</button>
+              <button class="toggle-btn" onclick="selectToggle(this,'pv-aanwezig')">Nee</button>
+            </div>
+          </div>
+          <div class="row-3">
             <div class="field"><label>Aantal panelen</label><input type="text" id="f-pv-aantal" placeholder="0"></div>
+            <div class="field"><label>Modelnaam</label><input type="text" id="f-pv-model" placeholder="—"></div>
             <div class="field"><label>Bouwjaar</label><input type="text" id="f-pv-bouwjaar" placeholder="—"></div>
           </div>
-          <div class="field"><label>Modelnaam</label><input type="text" id="f-pv-model" placeholder="—"></div>
           <div class="field"><label>Oriëntatie</label><input type="text" id="f-pv-ori" placeholder="Zuid / Oost-West / etc."></div>
           <div class="field"><label>Opmerkingen</label><textarea id="f-pv-opm" placeholder="—"></textarea></div>
         </div>
@@ -480,9 +392,9 @@
       <div class="section">
         <div class="section-header" onclick="toggleSection(this)">
           <div class="section-title"><i class="ti ti-window"></i>Geveldelen (Ag)</div>
-          <i class="ti ti-chevron-down chevron open"></i>
+          <i class="ti ti-chevron-down chevron"></i>
         </div>
-        <div class="section-body">
+        <div class="section-body collapsed">
           <p style="font-size:13px;color:var(--text-secondary)">Voeg geveldelen toe per oriëntatie</p>
           <div id="ag-zones"></div>
           <button class="add-row-btn" onclick="addAgZone()">
@@ -495,11 +407,11 @@
       <div class="section">
         <div class="section-header" onclick="toggleSection(this)">
           <div class="section-title"><i class="ti ti-notes"></i>Aantekeningen</div>
-          <i class="ti ti-chevron-down chevron open"></i>
+          <i class="ti ti-chevron-down chevron"></i>
         </div>
-        <div class="section-body">
+        <div class="section-body collapsed">
           <div class="field">
-            <textarea id="f-aantekeningen" style="min-height:140px" placeholder="Vrije aantekeningen..."></textarea>
+            <textarea id="f-aantekeningen" style="min-height:160px" placeholder="Vrije aantekeningen..."></textarea>
           </div>
         </div>
       </div>
@@ -520,6 +432,35 @@
 <script>
   let projects = JSON.parse(localStorage.getItem('elprojects') || '[]');
   let currentId = null;
+
+  const toggleFields = ['rekenzones','cap-vloer','cap-gevel','verw-aantal','vent-type','tap-aantal','tap-aantalkb','koel-aanwezig','koel-aantal','pv-aanwezig'];
+  const toggleState = {};
+  toggleFields.forEach(f => toggleState[f] = null);
+
+  function selectToggle(btn, field) {
+    const group = document.getElementById('tg-' + field);
+    const alreadySelected = btn.classList.contains('selected');
+    group.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('selected'));
+    if (!alreadySelected) { btn.classList.add('selected'); toggleState[field] = btn.textContent; }
+    else { toggleState[field] = null; }
+  }
+
+  function setToggle(field, value) {
+    if (!value) return;
+    const group = document.getElementById('tg-' + field);
+    if (!group) return;
+    group.querySelectorAll('.toggle-btn').forEach(b => {
+      if (b.textContent === value) { b.classList.add('selected'); toggleState[field] = value; }
+    });
+  }
+
+  function clearToggles() {
+    toggleFields.forEach(f => {
+      toggleState[f] = null;
+      const group = document.getElementById('tg-' + f);
+      if (group) group.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('selected'));
+    });
+  }
 
   function showToast(msg) {
     const t = document.getElementById('toast');
@@ -542,18 +483,12 @@
     window.scrollTo(0, 0);
   }
 
-  function goList() {
-    showScreen('screen-list');
-    renderList();
-  }
+  function goList() { showScreen('screen-list'); renderList(); }
 
   function renderList() {
     const el = document.getElementById('project-list');
     if (!projects.length) {
-      el.innerHTML = `<div class="empty-state">
-        <i class="ti ti-file-plus"></i>
-        <p>Nog geen opnames.<br>Klik op "Nieuwe opname" om te beginnen.</p>
-      </div>`;
+      el.innerHTML = '<div class="empty-state"><i class="ti ti-file-plus"></i><p>Nog geen opnames.<br>Klik op "Nieuwe opname" om te beginnen.</p></div>';
       return;
     }
     el.innerHTML = projects.map((p, i) => {
@@ -561,14 +496,11 @@
       const meta = [p.postcode, p.plaats].filter(Boolean).join(' ') || '—';
       const datum = p.datum || '—';
       const pct = completionPct(p);
-      return `<div class="project-card" onclick="openProject(${i})">
-        <div class="p-adres">${adres}</div>
-        <div class="p-meta">${meta} &nbsp;·&nbsp; ${datum}</div>
-        <div class="p-row">
-          <span class="badge">${pct}% ingevuld</span>
-          <i class="ti ti-chevron-right" style="font-size:16px;color:var(--text-secondary)"></i>
-        </div>
-      </div>`;
+      return '<div class="project-card" onclick="openProject(' + i + ')">' +
+        '<div class="p-adres">' + adres + '</div>' +
+        '<div class="p-meta">' + meta + ' &nbsp;·&nbsp; ' + datum + '</div>' +
+        '<div class="p-row"><span class="badge">' + pct + '% ingevuld</span>' +
+        '<i class="ti ti-chevron-right" style="font-size:16px;color:var(--text-secondary)"></i></div></div>';
     }).join('');
   }
 
@@ -581,6 +513,7 @@
   function openNewProject() {
     currentId = null;
     clearForm();
+    clearToggles();
     document.getElementById('form-title').textContent = 'Nieuwe opname';
     document.getElementById('form-subtitle').textContent = 'Niet opgeslagen';
     initConstructies([]);
@@ -598,39 +531,33 @@
   }
 
   const simpleFields = [
-    'adres','postcode','plaats','datum','opnemer',
-    'rekenzones','hoogte','bouwjaar','renovatiejaar','cap-vloer','cap-gevel',
+    'adres','postcode','plaats','datum',
+    'hoogte','bouwjaar','renovatiejaar',
     'opp1','opp2','opp3','opp4','opp-overig','woonfuncties',
-    'verw-aantal','verw-type1','verw-type2','verw-afgifte','verw-regeling','verw-opm',
-    'vent-type','vent-subtype','vent-opm',
-    'tap-aantal','tap-type1','tap-type2','tap-aantalkb','tap-lk','tap-lb','tap-opm',
-    'koel-aanwezig','koel-aantal','koel-type','koel-afgifte','koel-vermogen','koel-opm',
-    'pv-aanwezig','pv-aantal','pv-bouwjaar','pv-model','pv-ori','pv-opm',
+    'verw-type1','verw-type2','verw-afgifte','verw-regeling','verw-opm',
+    'vent-subtype','vent-opm',
+    'tap-type1','tap-type2','tap-lk','tap-lb','tap-opm',
+    'koel-type','koel-afgifte','koel-vermogen','koel-opm',
+    'pv-aantal','pv-bouwjaar','pv-model','pv-ori','pv-opm',
     'aantekeningen'
   ];
 
   function clearForm() {
-    simpleFields.forEach(id => {
-      const el = document.getElementById('f-' + id);
-      if (el) el.value = '';
-    });
+    simpleFields.forEach(id => { const el = document.getElementById('f-' + id); if (el) el.value = ''; });
   }
 
   function fillForm(p) {
-    simpleFields.forEach(id => {
-      const el = document.getElementById('f-' + id);
-      if (el) el.value = p[id] || '';
-    });
+    simpleFields.forEach(id => { const el = document.getElementById('f-' + id); if (el) el.value = p[id] || ''; });
+    clearToggles();
+    toggleFields.forEach(f => setToggle(f, p[f]));
     initConstructies(p.constructies || []);
     initAgZones(p.agZones || []);
   }
 
   function readForm() {
     const data = {};
-    simpleFields.forEach(id => {
-      const el = document.getElementById('f-' + id);
-      if (el) data[id] = el.value.trim();
-    });
+    simpleFields.forEach(id => { const el = document.getElementById('f-' + id); if (el) data[id] = el.value.trim(); });
+    toggleFields.forEach(f => data[f] = toggleState[f] || '');
     data.constructies = readConstructies();
     data.agZones = readAgZones();
     return data;
@@ -638,16 +565,9 @@
 
   function saveProject() {
     const data = readForm();
-    if (!data.adres && !data.postcode) {
-      showToast('Vul minimaal een adres in');
-      return;
-    }
-    if (currentId === null) {
-      projects.push(data);
-      currentId = projects.length - 1;
-    } else {
-      projects[currentId] = data;
-    }
+    if (!data.adres && !data.postcode) { showToast('Vul minimaal een adres in'); return; }
+    if (currentId === null) { projects.push(data); currentId = projects.length - 1; }
+    else { projects[currentId] = data; }
     localStorage.setItem('elprojects', JSON.stringify(projects));
     document.getElementById('form-title').textContent = data.adres || 'Opname';
     document.getElementById('form-subtitle').textContent = 'Opgeslagen ✓';
@@ -664,42 +584,65 @@
     }
   }
 
-  /* Constructies */
-  function initConstructies(rows) {
+  /* ── Constructies ── */
+  const CONSTRUCTIE_NAMEN = ['Gevel', 'Dak', 'Vloer', 'Deur', 'Paneel', 'Glas'];
+
+  function initConstructies(savedRows) {
     const tbody = document.getElementById('constructies-body');
     tbody.innerHTML = '';
-    if (!rows.length) { addConstructieRow(); return; }
-    rows.forEach(r => addConstructieRow(r));
+    if (!savedRows.length) {
+      // Fresh project: 6 rows, each pre-selected with their type
+      CONSTRUCTIE_NAMEN.forEach(naam => addConstructieRow({ naam }));
+    } else {
+      // Restore saved data, keep at least 6 rows
+      const padded = [...savedRows];
+      while (padded.length < CONSTRUCTIE_NAMEN.length) {
+        padded.push({ naam: CONSTRUCTIE_NAMEN[padded.length] });
+      }
+      padded.forEach(r => addConstructieRow(r));
+    }
   }
 
   function addConstructieRow(data) {
     const tbody = document.getElementById('constructies-body');
     const tr = document.createElement('tr');
-    const cols = [
-      { key: 'naam',        ph: 'Gevel noord' },
-      { key: 'type',        ph: 'Gevel / Dak / Vloer' },
-      { key: 'isolatie',    ph: 'Ja / nee / onbekend' },
-      { key: 'begrenzing',  ph: '—' },
-      { key: 'dikte',       ph: 'mm of bouwjaar' },
-      { key: 'opmerkingen', ph: '—' },
-    ];
-    tr.innerHTML = cols.map(c =>
-      `<td><input type="text" data-c="${c.key}" value="${data && data[c.key] ? data[c.key] : ''}" placeholder="${c.ph}"></td>`
-    ).join('');
+    const naamVal  = data && data.naam       ? data.naam       : '';
+    const isoVal   = data && data.isolatie   ? data.isolatie   : '';
+
+    const naamBtn = function(opt) { return '<button class="toggle-btn' + (naamVal===opt?' selected':'') + '" onclick="selectCellToggle(this)">' + opt + '</button>'; };
+    const isoBtn  = function(opt) { return '<button class="toggle-btn' + (isoVal===opt?' selected':'') + '" onclick="selectCellToggle(this)">' + opt + '</button>'; };
+
+    tr.innerHTML =
+      '<td style="white-space:nowrap"><div class="cell-toggle" style="flex-wrap:nowrap" data-c="naam">' + CONSTRUCTIE_NAMEN.map(naamBtn).join('') + '</div></td>' +
+      '<td><div class="cell-toggle" data-c="isolatie">' + isoBtn('Ja') + isoBtn('Nee') + isoBtn('Onbekend') + '</div></td>' +
+      '<td><input type="text" data-c="dikte" value="' + (data&&data.dikte?data.dikte:'') + '" placeholder="mm of bouwjaar"></td>' +
+      '<td><input type="text" data-c="opmerkingen" value="' + (data&&data.opmerkingen?data.opmerkingen:'') + '" placeholder="—"></td>';
+
     tbody.appendChild(tr);
+  }
+
+  function selectCellToggle(btn) {
+    const group = btn.closest('.cell-toggle');
+    const already = btn.classList.contains('selected');
+    group.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('selected'));
+    if (!already) btn.classList.add('selected');
   }
 
   function readConstructies() {
     const rows = [];
     document.querySelectorAll('#constructies-body tr').forEach(tr => {
       const obj = {};
-      tr.querySelectorAll('input').forEach(inp => obj[inp.dataset.c] = inp.value.trim());
+      tr.querySelectorAll('input[data-c]').forEach(inp => obj[inp.dataset.c] = inp.value.trim());
+      tr.querySelectorAll('.cell-toggle[data-c]').forEach(grp => {
+        const sel = grp.querySelector('.toggle-btn.selected');
+        obj[grp.dataset.c] = sel ? sel.textContent : '';
+      });
       if (Object.values(obj).some(v => v)) rows.push(obj);
     });
     return rows;
   }
 
-  /* Ag zones */
+  /* ── Geveldelen (Ag) ── */
   let agZoneCount = 0;
 
   function initAgZones(zones) {
@@ -714,42 +657,72 @@
     const div = document.createElement('div');
     div.className = 'ag-zone';
     div.dataset.agid = agZoneCount;
-    div.innerHTML = `
-      <div class="ag-zone-header">
-        <div class="field"><label>Oriëntatie</label><input type="text" data-ag="ori" value="${data && data.ori ? data.ori : ''}" placeholder="Voor / Achter / Links / Rechts"></div>
-        <div class="field"><label>Ag totaal (m²)</label><input type="text" data-ag="ag-totaal" value="${data && data['ag-totaal'] ? data['ag-totaal'] : ''}" placeholder="m²"></div>
-        <button onclick="this.closest('.ag-zone').remove()" class="btn btn-icon btn-sm" style="flex:0 0 auto" title="Verwijderen"><i class="ti ti-trash"></i></button>
-      </div>
-      <table class="ftable" style="margin-bottom:6px">
-        <thead><tr>
-          <th>Type</th>
-          <th>Naam</th>
-          <th>Ag (m²)</th>
-        </tr></thead>
-        <tbody class="ag-rows"></tbody>
-      </table>
-      <button class="add-row-btn" onclick="addAgRow(this)"><i class="ti ti-plus"></i> Rij toevoegen</button>
-    `;
+    const oriVal = data && data.ori ? data.ori : '';
+    const oriBtn = function(opt) { return '<button class="toggle-btn' + (oriVal===opt?' selected':'') + '" onclick="selectAgOri(this)">' + opt + '</button>'; };
+
+    div.innerHTML =
+      '<div class="ag-zone-header">' +
+        '<div class="field" style="flex:2"><label>Oriëntatie</label>' +
+          '<div class="toggle-group ag-ori-group">' + ['Voor','Achter','Links','Rechts'].map(oriBtn).join('') + '</div>' +
+        '</div>' +
+        '<div class="field" style="flex:1"><label>Ag totaal (m²)</label>' +
+          '<input type="text" data-ag="ag-totaal" value="' + (data&&data['ag-totaal']?data['ag-totaal']:'') + '" placeholder="m²">' +
+        '</div>' +
+        '<button onclick="this.closest(\'.ag-zone\').remove()" class="btn btn-icon btn-sm" title="Verwijderen"><i class="ti ti-trash"></i></button>' +
+      '</div>' +
+      '<table class="ftable" style="margin-bottom:8px">' +
+        '<thead><tr><th>Type</th><th>Naam</th><th>Ag (m²)</th><th style="width:42px"></th></tr></thead>' +
+        '<tbody class="ag-rows"></tbody>' +
+      '</table>';
+
     document.getElementById('ag-zones').appendChild(div);
     const rows = data && data.rows ? data.rows : [{}];
-    rows.forEach(r => addAgRow(div.querySelector('.add-row-btn'), r));
+    rows.forEach(r => addAgRow(div.querySelector('.ag-rows'), r));
   }
 
-  function addAgRow(btn, data) {
-    const tbody = btn.previousElementSibling.querySelector('tbody');
+  function selectAgOri(btn) {
+    const group = btn.closest('.ag-ori-group');
+    const already = btn.classList.contains('selected');
+    group.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('selected'));
+    if (!already) btn.classList.add('selected');
+  }
+
+  function nextAgLetter() {
+    const letters = [];
+    document.querySelectorAll('#ag-zones .ag-rows tr').forEach(tr => {
+      const naam = tr.querySelector('[data-agr="naam"]');
+      if (naam && naam.value.trim()) letters.push(naam.value.trim().toUpperCase());
+    });
+    const valid = letters.filter(l => /^[A-Z]$/.test(l)).sort();
+    if (!valid.length) return 'A';
+    return String.fromCharCode(valid[valid.length - 1].charCodeAt(0) + 1);
+  }
+
+  function addAgRow(tbody, data) {
+    const naam = data && data.naam ? data.naam : nextAgLetter();
+    const type = data && data.type ? data.type : '';
+    const ag   = data && data.ag   ? data.ag   : '';
     const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td><input type="text" data-agr="type" value="${data && data.type ? data.type : ''}" placeholder="Glas / Paneel / Deur"></td>
-      <td><input type="text" data-agr="naam" value="${data && data.naam ? data.naam : ''}" placeholder="Naam"></td>
-      <td><input type="text" data-agr="ag" value="${data && data.ag ? data.ag : ''}" placeholder="m²"></td>
-    `;
+    tr.innerHTML =
+      '<td><input type="text" data-agr="type" value="' + type + '" placeholder="Glas / Paneel / Deur"></td>' +
+      '<td><input type="text" data-agr="naam" value="' + naam + '" placeholder="A"></td>' +
+      '<td><input type="text" data-agr="ag"   value="' + ag   + '" placeholder="m²"></td>' +
+      '<td><button class="dup-btn" onclick="duplicateAgRow(this)" title="Dupliceer rij"><i class="ti ti-copy"></i></button></td>';
     tbody.appendChild(tr);
+  }
+
+  function duplicateAgRow(btn) {
+    const tr = btn.closest('tr');
+    const tbody = tr.closest('tbody');
+    const type = tr.querySelector('[data-agr="type"]').value;
+    addAgRow(tbody, { type, naam: nextAgLetter(), ag: '' });
   }
 
   function readAgZones() {
     const zones = [];
     document.querySelectorAll('#ag-zones .ag-zone').forEach(div => {
-      const ori = div.querySelector('[data-ag="ori"]').value.trim();
+      const selOri = div.querySelector('.ag-ori-group .toggle-btn.selected');
+      const ori = selOri ? selOri.textContent : '';
       const agTotaal = div.querySelector('[data-ag="ag-totaal"]').value.trim();
       const rows = [];
       div.querySelectorAll('.ag-rows tr').forEach(tr => {
