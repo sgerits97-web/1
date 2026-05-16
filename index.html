@@ -1,1 +1,476 @@
 
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); font-size: 15px; color: var(--color-text-primary); }
+.screen { display: none; }
+.screen.active { display: block; }
+.header { padding: 12px 16px; border-bottom: 0.5px solid var(--color-border-tertiary); display: flex; align-items: center; gap: 10px; background: var(--color-background-primary); position: sticky; top: 0; z-index: 10; }
+.btn { padding: 9px 16px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); font-size: 14px; font-weight: 500; cursor: pointer; color: var(--color-text-primary); }
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--color-text-primary); color: var(--color-background-primary); border-color: transparent; }
+.btn-danger { color: var(--color-text-danger); border-color: var(--color-border-danger); }
+.btn-sm { padding: 7px 12px; font-size: 13px; }
+.project-list { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.project-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 14px 16px; cursor: pointer; }
+.project-card:active { background: var(--color-background-secondary); }
+.project-card .adres { font-size: 15px; font-weight: 500; }
+.project-card .meta { font-size: 12px; color: var(--color-text-secondary); margin-top: 4px; }
+.project-card .status-row { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+.badge { font-size: 11px; padding: 3px 8px; border-radius: 20px; background: var(--color-background-secondary); color: var(--color-text-secondary); }
+.empty-state { text-align: center; padding: 60px 24px; color: var(--color-text-secondary); }
+.empty-state i { font-size: 40px; display: block; margin-bottom: 12px; opacity: 0.4; }
+.empty-state p { font-size: 14px; }
+.form-wrap { padding: 16px; padding-bottom: 80px; }
+.section { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); margin-bottom: 14px; overflow: hidden; }
+.section-header { padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; background: var(--color-background-secondary); }
+.section-header h2 { font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; color: var(--color-text-secondary); }
+.section-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 14px; }
+.section-body.collapsed { display: none; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 12px; color: var(--color-text-secondary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.03em; }
+.field input, .field textarea { width: 100%; padding: 12px 14px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); font-size: 16px; font-family: var(--font-sans); color: var(--color-text-primary); background: var(--color-background-primary); }
+.field input:focus, .field textarea:focus { outline: none; border-color: var(--color-border-primary); box-shadow: 0 0 0 2px var(--color-border-tertiary); }
+.field textarea { resize: vertical; min-height: 80px; }
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.table-section { overflow-x: auto; }
+table.form-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.form-table th { text-align: left; padding: 8px 6px; font-size: 11px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.03em; border-bottom: 0.5px solid var(--color-border-tertiary); }
+table.form-table td { padding: 5px 4px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+table.form-table input { width: 100%; padding: 8px 10px; border: 0.5px solid var(--color-border-secondary); border-radius: 6px; font-size: 15px; font-family: var(--font-sans); color: var(--color-text-primary); background: var(--color-background-primary); min-width: 0; }
+.add-row-btn { font-size: 13px; color: var(--color-text-secondary); border: none; background: none; cursor: pointer; padding: 8px 0; display: flex; align-items: center; gap: 6px; }
+.bottom-bar { position: sticky; bottom: 0; padding: 12px 16px; background: var(--color-background-primary); border-top: 0.5px solid var(--color-border-tertiary); display: flex; gap: 10px; }
+.toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--color-text-primary); color: var(--color-background-primary); padding: 10px 20px; border-radius: var(--border-radius-md); font-size: 14px; z-index: 100; opacity: 0; transition: opacity 0.2s; pointer-events: none; white-space: nowrap; }
+.toast.show { opacity: 1; }
+.chevron { font-size: 16px; transition: transform 0.2s; }
+.chevron.open { transform: rotate(180deg); }
+</style>
+
+<div>
+  <div id="toast" class="toast"></div>
+
+  <div id="screen-list" class="screen active">
+    <div class="header">
+      <i class="ti ti-bolt" style="font-size:20px" aria-hidden="true"></i>
+      <span style="flex:1;font-size:16px;font-weight:500">Energielabel Opnames</span>
+      <button class="btn btn-primary btn-sm" onclick="openNewProject()">
+        <i class="ti ti-plus" aria-hidden="true" style="margin-right:4px"></i>Nieuwe opname
+      </button>
+    </div>
+    <div id="project-list" class="project-list"></div>
+  </div>
+
+  <div id="screen-form" class="screen">
+    <div class="header">
+      <button class="btn btn-sm" onclick="goList()" style="padding:8px 10px"><i class="ti ti-arrow-left" aria-hidden="true"></i></button>
+      <div style="flex:1;overflow:hidden">
+        <div id="form-title" style="font-size:15px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Nieuwe opname</div>
+        <div id="form-subtitle" style="font-size:12px;color:var(--color-text-secondary)">Niet opgeslagen</div>
+      </div>
+      <button class="btn btn-sm btn-primary" onclick="saveProject()">Opslaan</button>
+    </div>
+
+    <div class="form-wrap">
+
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h2><i class="ti ti-home" aria-hidden="true" style="margin-right:6px"></i>Adres &amp; Project</h2>
+          <i class="ti ti-chevron-down chevron open" aria-hidden="true"></i>
+        </div>
+        <div class="section-body">
+          <div class="field"><label>Adres (straat + huisnummer)</label><input type="text" id="f-adres" placeholder="Dorpsstraat 12"></div>
+          <div class="row-2">
+            <div class="field"><label>Postcode</label><input type="text" id="f-postcode" placeholder="5612 AB"></div>
+            <div class="field"><label>Plaats</label><input type="text" id="f-plaats" placeholder="Eindhoven"></div>
+          </div>
+          <div class="field"><label>Opnamedatum</label><input type="text" id="f-datum" placeholder="16-05-2025"></div>
+          <div class="field"><label>Opgenomen door</label><input type="text" id="f-opnemer" placeholder="Naam"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h2><i class="ti ti-building" aria-hidden="true" style="margin-right:6px"></i>Rekenzones &amp; Gebouw</h2>
+          <i class="ti ti-chevron-down chevron open" aria-hidden="true"></i>
+        </div>
+        <div class="section-body">
+          <div class="row-2">
+            <div class="field"><label>Aantal rekenzones</label><input type="text" id="f-rekenzones" placeholder="1 / 2 / 3"></div>
+            <div class="field"><label>Gebouwhoogte (m)</label><input type="text" id="f-hoogte" placeholder="6.5"></div>
+          </div>
+          <div class="row-2">
+            <div class="field"><label>Bouwjaar</label><input type="text" id="f-bouwjaar" placeholder="1975"></div>
+            <div class="field"><label>Renovatiejaar</label><input type="text" id="f-renovatiejaar" placeholder="2010"></div>
+          </div>
+          <div class="field"><label>Capaciteit vloer</label><input type="text" id="f-cap-vloer" placeholder="Licht / Zwaar / Zeer zwaar"></div>
+          <div class="field"><label>Capaciteit gevels</label><input type="text" id="f-cap-gevel" placeholder="Licht / Zwaar / Zeer zwaar"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h2><i class="ti ti-ruler-2" aria-hidden="true" style="margin-right:6px"></i>Gebruiksoppervlakte</h2>
+          <i class="ti ti-chevron-down chevron open" aria-hidden="true"></i>
+        </div>
+        <div class="section-body">
+          <div class="row-2">
+            <div class="field"><label>1e bouwlaag (m²)</label><input type="text" id="f-opp1" placeholder="0"></div>
+            <div class="field"><label>2e bouwlaag (m²)</label><input type="text" id="f-opp2" placeholder="0"></div>
+          </div>
+          <div class="row-2">
+            <div class="field"><label>3e bouwlaag (m²)</label><input type="text" id="f-opp3" placeholder="0"></div>
+            <div class="field"><label>4e bouwlaag (m²)</label><input type="text" id="f-opp4" placeholder="0"></div>
+          </div>
+          <div class="row-2">
+            <div class="field"><label>Overige bouwlagen (m²)</label><input type="text" id="f-opp-overig" placeholder="0"></div>
+            <div class="field"><label>Aantal woonfuncties</label><input type="text" id="f-woonfuncties" placeholder="1"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h2><i class="ti ti-layers-intersect" aria-hidden="true" style="margin-right:6px"></i>Constructies</h2>
+          <i class="ti ti-chevron-down chevron open" aria-hidden="true"></i>
+        </div>
+        <div class="section-body">
+          <div class="table-section">
+            <table class="form-table">
+              <thead>
+                <tr>
+                  <th style="min-width:110px">Naam bouwdeel</th>
+                  <th style="min-width:90px">Type</th>
+                  <th style="min-width:80px">Isolatie</th>
+                  <th style="min-width:80px">Begrenzing</th>
+                  <th style="min-width:75px">Dikte (mm)</th>
+                  <th style="min-width:100px">Opmerkingen</th>
+                </tr>
+              </thead>
+              <tbody id="constructies-body"></tbody>
+            </table>
+          </div>
+          <button class="add-row-btn" onclick="addConstructieRow()"><i class="ti ti-plus" aria-hidden="true"></i> Bouwdeel toevoegen</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h2><i class="ti ti-flame" aria-hidden="true" style="margin-right:6px"></i>Verwarming</h2>
+          <i class="ti ti-chevron-down chevron open" aria-hidden="true"></i>
+        </div>
+        <div class="section-body">
+          <div class="field"><label>Aantal opwekkers</label><input type="text" id="f-verw-aantal" placeholder="1 / 2"></div>
+          <div class="field"><label>Type opwekker 1 (anders dan hr107)</label><input type="text" id="f-verw-type1" placeholder="Bijv. warmtepomp"></div>
+          <div class="field"><label>Type opwekker 2</label><input type="text" id="f-verw-type2" placeholder="—"></div>
+          <div class="field"><label>Afgifte (anders dan radiatoren)</label><input type="text" id="f-verw-afgifte" placeholder="Bijv. vloerverwarming"></div>
+          <div class="field"><label>Regeling (anders dan kamerthermostaat)</label><input type="text" id="f-verw-regeling" placeholder="Bijv. weersafhankelijk"></div>
+          <div class="field"><label>Opmerkingen</label><textarea id="f-verw-opm" placeholder="—"></textarea></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h2><i class="ti ti-wind" aria-hidden="true" style="margin-right:6px"></i>Ventilatie</h2>
+          <i class="ti ti-chevron-down chevron open" aria-hidden="true"></i>
+        </div>
+        <div class="section-body">
+          <div class="field"><label>Type systeem</label><input type="text" id="f-vent-type" placeholder="A / B / C / D"></div>
+          <div class="field"><label>Subtype</label><input type="text" id="f-vent-subtype" placeholder="—"></div>
+          <div class="field"><label>Opmerkingen (gegevens niet forfetair)</label><textarea id="f-vent-opm" placeholder="—"></textarea></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h2><i class="ti ti-droplet" aria-hidden="true" style="margin-right:6px"></i>Tapwater</h2>
+          <i class="ti ti-chevron-down chevron open" aria-hidden="true"></i>
+        </div>
+        <div class="section-body">
+          <div class="field"><label>Aantal opwekkers</label><input type="text" id="f-tap-aantal" placeholder="één / twee"></div>
+          <div class="field"><label>Type opwekker 1 (anders dan hr107)</label><input type="text" id="f-tap-type1" placeholder="—"></div>
+          <div class="field"><label>Type opwekker 2 (anders dan forfetaire keukenboiler)</label><input type="text" id="f-tap-type2" placeholder="—"></div>
+          <div class="field"><label>Aantal keukens / badkamers &gt;1</label><input type="text" id="f-tap-aantalkb" placeholder="Keuken / badkamer"></div>
+          <div class="row-2">
+            <div class="field"><label>Leidinglengte keuken (m)</label><input type="text" id="f-tap-lk" placeholder="0"></div>
+            <div class="field"><label>Leidinglengte badkamer (m)</label><input type="text" id="f-tap-lb" placeholder="0"></div>
+          </div>
+          <div class="field"><label>Opmerkingen</label><textarea id="f-tap-opm" placeholder="—"></textarea></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h2><i class="ti ti-snowflake" aria-hidden="true" style="margin-right:6px"></i>Koeling</h2>
+          <i class="ti ti-chevron-down chevron open" aria-hidden="true"></i>
+        </div>
+        <div class="section-body">
+          <div class="field"><label>Aanwezig</label><input type="text" id="f-koel-aanwezig" placeholder="Ja / Nee"></div>
+          <div class="field"><label>Aantal opwekkers</label><input type="text" id="f-koel-aantal" placeholder="één / twee / drie"></div>
+          <div class="field"><label>Type (anders dan compressie)</label><input type="text" id="f-koel-type" placeholder="—"></div>
+          <div class="field"><label>Afgifte (anders dan airco)</label><input type="text" id="f-koel-afgifte" placeholder="—"></div>
+          <div class="field"><label>Vermogen</label><input type="text" id="f-koel-vermogen" placeholder="kW"></div>
+          <div class="field"><label>Opmerkingen</label><textarea id="f-koel-opm" placeholder="—"></textarea></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h2><i class="ti ti-solar-panel" aria-hidden="true" style="margin-right:6px"></i>PV (Zonnepanelen)</h2>
+          <i class="ti ti-chevron-down chevron open" aria-hidden="true"></i>
+        </div>
+        <div class="section-body">
+          <div class="field"><label>Aanwezig</label><input type="text" id="f-pv-aanwezig" placeholder="Ja / Nee"></div>
+          <div class="row-2">
+            <div class="field"><label>Aantal panelen</label><input type="text" id="f-pv-aantal" placeholder="0"></div>
+            <div class="field"><label>Bouwjaar</label><input type="text" id="f-pv-bouwjaar" placeholder="—"></div>
+          </div>
+          <div class="field"><label>Modelnaam</label><input type="text" id="f-pv-model" placeholder="—"></div>
+          <div class="field"><label>Oriëntatie</label><input type="text" id="f-pv-ori" placeholder="Zuid / Oost-West / etc."></div>
+          <div class="field"><label>Opmerkingen</label><textarea id="f-pv-opm" placeholder="—"></textarea></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h2><i class="ti ti-window" aria-hidden="true" style="margin-right:6px"></i>Geveldelen (Ag)</h2>
+          <i class="ti ti-chevron-down chevron open" aria-hidden="true"></i>
+        </div>
+        <div class="section-body">
+          <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:4px">Voeg geveldelen toe per oriëntatie</p>
+          <div id="ag-zones"></div>
+          <button class="add-row-btn" onclick="addAgZone()"><i class="ti ti-plus" aria-hidden="true"></i> Oriëntatie toevoegen</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <h2><i class="ti ti-notes" aria-hidden="true" style="margin-right:6px"></i>Aantekeningen</h2>
+          <i class="ti ti-chevron-down chevron open" aria-hidden="true"></i>
+        </div>
+        <div class="section-body">
+          <div class="field"><textarea id="f-aantekeningen" style="min-height:140px" placeholder="Vrije aantekeningen..."></textarea></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="bottom-bar">
+      <button class="btn btn-danger btn-sm" onclick="confirmDelete()">
+        <i class="ti ti-trash" aria-hidden="true"></i>
+      </button>
+      <button class="btn btn-primary" onclick="saveProject()" style="flex:1">
+        <i class="ti ti-device-floppy" aria-hidden="true" style="margin-right:6px"></i>Opslaan
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+let projects = JSON.parse(localStorage.getItem('elprojects') || '[]');
+let currentId = null;
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function toggleSection(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.chevron');
+  const isOpen = !body.classList.contains('collapsed');
+  body.classList.toggle('collapsed', isOpen);
+  chevron.classList.toggle('open', !isOpen);
+}
+
+function renderList() {
+  const el = document.getElementById('project-list');
+  if (!projects.length) {
+    el.innerHTML = '<div class="empty-state"><i class="ti ti-file-plus" aria-hidden="true"></i><p>Nog geen opnames.<br>Klik op "Nieuwe opname" om te beginnen.</p></div>';
+    return;
+  }
+  el.innerHTML = projects.map((p,i) => {
+    const adres = p.adres || 'Onbekend adres';
+    const datum = p.datum || '—';
+    const pct = completionPct(p);
+    return `<div class="project-card" onclick="openProject(${i})">
+      <div class="adres">${adres}</div>
+      <div class="meta">${p.postcode||''} ${p.plaats||''} &nbsp;·&nbsp; ${datum}</div>
+      <div class="status-row">
+        <span class="badge">${pct}% ingevuld</span>
+        <i class="ti ti-chevron-right" aria-hidden="true" style="font-size:16px;color:var(--color-text-secondary)"></i>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function completionPct(p) {
+  const fields = ['adres','postcode','plaats','datum','rekenzones','hoogte','bouwjaar','cap-vloer','cap-gevel','opp1','verw-type1','vent-type','tap-aantal'];
+  const filled = fields.filter(f => p[f] && p[f].toString().trim()).length;
+  return Math.round(filled / fields.length * 100);
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function goList() {
+  showScreen('screen-list');
+  renderList();
+}
+
+function openNewProject() {
+  currentId = null;
+  clearForm();
+  document.getElementById('form-title').textContent = 'Nieuwe opname';
+  document.getElementById('form-subtitle').textContent = 'Niet opgeslagen';
+  initConstructies([]);
+  initAgZones([]);
+  showScreen('screen-form');
+}
+
+function openProject(i) {
+  currentId = i;
+  const p = projects[i];
+  fillForm(p);
+  document.getElementById('form-title').textContent = p.adres || 'Opname';
+  document.getElementById('form-subtitle').textContent = p.datum || '';
+  showScreen('screen-form');
+}
+
+const simpleFields = ['adres','postcode','plaats','datum','opnemer','rekenzones','hoogte','bouwjaar','renovatiejaar','cap-vloer','cap-gevel','opp1','opp2','opp3','opp4','opp-overig','woonfuncties','verw-aantal','verw-type1','verw-type2','verw-afgifte','verw-regeling','verw-opm','vent-type','vent-subtype','vent-opm','tap-aantal','tap-type1','tap-type2','tap-aantalkb','tap-lk','tap-lb','tap-opm','koel-aanwezig','koel-aantal','koel-type','koel-afgifte','koel-vermogen','koel-opm','pv-aanwezig','pv-aantal','pv-bouwjaar','pv-model','pv-ori','pv-opm','aantekeningen'];
+
+function clearForm() {
+  simpleFields.forEach(id => { const el = document.getElementById('f-'+id); if (el) el.value = ''; });
+}
+
+function fillForm(p) {
+  simpleFields.forEach(id => { const el = document.getElementById('f-'+id); if (el) el.value = p[id] || ''; });
+  initConstructies(p.constructies || []);
+  initAgZones(p.agZones || []);
+}
+
+function readForm() {
+  const data = {};
+  simpleFields.forEach(id => { const el = document.getElementById('f-'+id); if (el) data[id] = el.value.trim(); });
+  data.constructies = readConstructies();
+  data.agZones = readAgZones();
+  return data;
+}
+
+function saveProject() {
+  const data = readForm();
+  if (!data.adres && !data.postcode) { showToast('Vul minimaal een adres in'); return; }
+  if (currentId === null) {
+    projects.push(data);
+    currentId = projects.length - 1;
+  } else {
+    projects[currentId] = data;
+  }
+  localStorage.setItem('elprojects', JSON.stringify(projects));
+  document.getElementById('form-title').textContent = data.adres || 'Opname';
+  document.getElementById('form-subtitle').textContent = 'Opgeslagen ✓';
+  showToast('Opgeslagen!');
+}
+
+function confirmDelete() {
+  if (currentId === null) { goList(); return; }
+  if (confirm('Dit project verwijderen?')) {
+    projects.splice(currentId, 1);
+    localStorage.setItem('elprojects', JSON.stringify(projects));
+    currentId = null;
+    goList();
+  }
+}
+
+function initConstructies(rows) {
+  const tbody = document.getElementById('constructies-body');
+  tbody.innerHTML = '';
+  if (!rows.length) { addConstructieRow(); return; }
+  rows.forEach(r => addConstructieRow(r));
+}
+
+function addConstructieRow(data) {
+  const tbody = document.getElementById('constructies-body');
+  const tr = document.createElement('tr');
+  const fields = ['naam','type','isolatie','begrenzing','dikte','opmerkingen'];
+  const placeholders = ['Gevel noord','Gevel / Dak / Vloer','Ja / nee / onbekend','','mm of bouwjaar',''];
+  tr.innerHTML = fields.map((f,i) => `<td><input type="text" data-c="${f}" value="${data&&data[f]?data[f]:''}" placeholder="${placeholders[i]}"></td>`).join('');
+  tbody.appendChild(tr);
+}
+
+function readConstructies() {
+  const rows = [];
+  document.querySelectorAll('#constructies-body tr').forEach(tr => {
+    const obj = {};
+    tr.querySelectorAll('input').forEach(inp => obj[inp.dataset.c] = inp.value.trim());
+    if (Object.values(obj).some(v => v)) rows.push(obj);
+  });
+  return rows;
+}
+
+let agZoneCount = 0;
+function initAgZones(zones) {
+  document.getElementById('ag-zones').innerHTML = '';
+  agZoneCount = 0;
+  if (!zones.length) { addAgZone(); return; }
+  zones.forEach(z => addAgZone(z));
+}
+
+function addAgZone(data) {
+  agZoneCount++;
+  const div = document.createElement('div');
+  div.style.cssText = 'margin-bottom:14px;border:0.5px solid var(--color-border-tertiary);border-radius:8px;padding:12px';
+  div.dataset.agid = agZoneCount;
+  div.innerHTML = `
+    <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:10px">
+      <div class="field" style="flex:1"><label>Oriëntatie</label><input type="text" data-ag="ori" value="${data&&data.ori?data.ori:''}" placeholder="Voor / Achter / Links / Rechts"></div>
+      <div class="field" style="flex:1"><label>Ag totaal (m²)</label><input type="text" data-ag="ag-totaal" value="${data&&data['ag-totaal']?data['ag-totaal']:''}" placeholder="m²"></div>
+      <button onclick="this.closest('[data-agid]').remove()" style="padding:10px 12px;border:0.5px solid var(--color-border-secondary);border-radius:6px;background:none;cursor:pointer;color:var(--color-text-secondary)"><i class="ti ti-trash" aria-hidden="true"></i></button>
+    </div>
+    <table style="width:100%;border-collapse:collapse">
+      <thead><tr>
+        <th style="font-size:11px;color:var(--color-text-secondary);text-align:left;padding:4px;font-weight:500">Type</th>
+        <th style="font-size:11px;color:var(--color-text-secondary);text-align:left;padding:4px;font-weight:500">Naam</th>
+        <th style="font-size:11px;color:var(--color-text-secondary);text-align:left;padding:4px;font-weight:500">Ag (m²)</th>
+      </tr></thead>
+      <tbody class="ag-rows"></tbody>
+    </table>
+    <button class="add-row-btn" onclick="addAgRow(this)" style="margin-top:6px"><i class="ti ti-plus" aria-hidden="true"></i> Rij toevoegen</button>
+  `;
+  document.getElementById('ag-zones').appendChild(div);
+  const rows = data && data.rows ? data.rows : [{}];
+  rows.forEach(r => addAgRow(div.querySelector('.add-row-btn'), r));
+}
+
+function addAgRow(btn, data) {
+  const tbody = btn.previousElementSibling.querySelector('tbody');
+  const tr = document.createElement('tr');
+  const s = 'width:100%;padding:7px 8px;border:0.5px solid var(--color-border-secondary);border-radius:5px;font-size:15px;font-family:var(--font-sans);color:var(--color-text-primary);background:var(--color-background-primary)';
+  tr.innerHTML = `
+    <td style="padding:3px"><input type="text" data-agr="type" value="${data&&data.type?data.type:''}" placeholder="Glas / Paneel / Deur" style="${s}"></td>
+    <td style="padding:3px"><input type="text" data-agr="naam" value="${data&&data.naam?data.naam:''}" placeholder="Naam" style="${s}"></td>
+    <td style="padding:3px"><input type="text" data-agr="ag" value="${data&&data.ag?data.ag:''}" placeholder="m²" style="${s}"></td>
+  `;
+  tbody.appendChild(tr);
+}
+
+function readAgZones() {
+  const zones = [];
+  document.querySelectorAll('#ag-zones [data-agid]').forEach(div => {
+    const ori = div.querySelector('[data-ag="ori"]').value.trim();
+    const agTotaal = div.querySelector('[data-ag="ag-totaal"]').value.trim();
+    const rows = [];
+    div.querySelectorAll('.ag-rows tr').forEach(tr => {
+      const obj = {};
+      tr.querySelectorAll('[data-agr]').forEach(inp => obj[inp.dataset.agr] = inp.value.trim());
+      if (Object.values(obj).some(v => v)) rows.push(obj);
+    });
+    if (ori || agTotaal || rows.length) zones.push({ ori, 'ag-totaal': agTotaal, rows });
+  });
+  return zones;
+}
+
+renderList();
+</script>
