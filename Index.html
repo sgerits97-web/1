@@ -723,7 +723,7 @@
     document.querySelectorAll('#ag-zones .ag-zone').forEach(div => {
       const selOri = div.querySelector('.ag-ori-group .toggle-btn.selected');
       const ori = selOri ? selOri.textContent : '';
-      const agTotaal = div.querySelector('[data-ag="ag-totaal" inputmode="numeric"]').value.trim();
+      const agTotaal = div.querySelector('[data-ag="ag-totaal"]').value.trim();
       const rows = [];
       div.querySelectorAll('.ag-rows tr').forEach(tr => {
         const obj = {};
